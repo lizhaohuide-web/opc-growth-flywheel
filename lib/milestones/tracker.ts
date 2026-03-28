@@ -367,7 +367,7 @@ function hasIdentifiedModels(notes: Array<{ models?: string[] }>): boolean {
 function getModelCount(notes: Array<{ models?: string[] }>): number {
   // 计算不同的思维模型数量
   const allModels = notes.flatMap(note => note.models || [])
-  return [...new Set(allModels)].length
+  return Array.from(new Set(allModels)).length
 }
 
 function hasBalancedWheel(assessments: unknown[]): boolean {
