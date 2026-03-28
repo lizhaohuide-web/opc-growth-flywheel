@@ -423,8 +423,8 @@ function hasContinuousGrowth(assessments: unknown[]): boolean {
   if (assessments.length < 3) return false
   // 检查连续3次评估总分是否都在上升
   for (let i = 0; i < 2; i++) {
-    const currentTotal = (assessments[i].dimensions as any).reduce((sum: number, d: any) => sum + d.score, 0)
-    const previousTotal = (assessments[i + 1].dimensions as any).reduce((sum: number, d: any) => sum + d.score, 0)
+    const currentTotal = ((assessments[i] as any).dimensions as any).reduce((sum: number, d: any) => sum + d.score, 0)
+    const previousTotal = ((assessments[i + 1] as any).dimensions as any).reduce((sum: number, d: any) => sum + d.score, 0)
     if (currentTotal <= previousTotal) {
       return false
     }
@@ -436,8 +436,8 @@ function getGrowthStreak(assessments: unknown[]): number {
   if (assessments.length < 2) return 0
   let streak = 1
   for (let i = 0; i < assessments.length - 1; i++) {
-    const currentTotal = (assessments[i].dimensions as any).reduce((sum: number, d: any) => sum + d.score, 0)
-    const previousTotal = (assessments[i + 1].dimensions as any).reduce((sum: number, d: any) => sum + d.score, 0)
+    const currentTotal = ((assessments[i] as any).dimensions as any).reduce((sum: number, d: any) => sum + d.score, 0)
+    const previousTotal = ((assessments[i + 1] as any).dimensions as any).reduce((sum: number, d: any) => sum + d.score, 0)
     if (currentTotal > previousTotal) {
       streak++
     } else {
