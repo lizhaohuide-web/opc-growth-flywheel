@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
     
     const daysRemaining = getDaysRemaining(subscription_end);
     const isActive = isPlanActive(subscription_plan as any, subscription_end);
-    const features = FEATURE_LIMITS[subscription_plan];
+    const features = FEATURE_LIMITS[subscription_plan as keyof typeof FEATURE_LIMITS];
     
     return Response.json({
       plan: subscription_plan,
