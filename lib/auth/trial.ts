@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server';
  * 此函数应在用户注册成功后调用
  */
 export async function setupTrialForNewUser(userId: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   try {
     // 检查用户是否已有订阅记录
