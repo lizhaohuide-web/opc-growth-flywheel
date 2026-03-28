@@ -38,7 +38,7 @@ export async function checkBadges(userId: string): Promise<Badge[]> {
   // 获取最近30天的笔记用于更复杂的徽章检测
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-  const recentNotes = notes?.filter(note => new Date(note.created_at) >= thirtyDaysAgo) || []
+  const recentNotes = notes?.filter(note => new Date(note.created_at as any) >= thirtyDaysAgo) || []
   
   // 获取用户最近的评估记录用于成长相关徽章
   const { data: assessments } = await supabase
@@ -342,7 +342,7 @@ function calculateStreak(notes: Array<{ created_at: string }>): number {
   let currentDate = today
   
   for (const note of notes) {
-    const noteDate = new Date(note.created_at)
+    const noteDate = new Date(note.created_at as any)
     noteDate.setHours(0, 0, 0, 0)
     
     const diffDays = Math.floor((currentDate.getTime() - noteDate.getTime()) / (1000 * 60 * 60 * 24))
@@ -422,8 +422,8 @@ function hasContinuousGrowth(assessments: unknown[]): boolean {
   if (assessments.length < 3) return false
   // 检查连续3次评估总分是否都在上升
   for (let i = 0; i < 2; i++) {
-    const currentTotal = assessments[i].dimensions.reduce((sum: number, d: any) => sum + d.score, 0)
-    const previousTotal = assessments[i + 1].dimensions.reduce((sum: number, d: any) => sum + d.score, 0)
+    const currentTotal = assessments[i].dimensions as any.reduce((sum: number, d: any) => sum + d.score, 0)
+    const previousTotal = assessments[i + 1].dimensions as any.reduce((sum: number, d: any) => sum + d.score, 0)
     if (currentTotal <= previousTotal) {
       return false
     }
@@ -435,8 +435,8 @@ function getGrowthStreak(assessments: unknown[]): number {
   if (assessments.length < 2) return 0
   let streak = 1
   for (let i = 0; i < assessments.length - 1; i++) {
-    const currentTotal = assessments[i].dimensions.reduce((sum: number, d: any) => sum + d.score, 0)
-    const previousTotal = assessments[i + 1].dimensions.reduce((sum: number, d: any) => sum + d.score, 0)
+    const currentTotal = assessments[i].dimensions as any.reduce((sum: number, d: any) => sum + d.score, 0)
+    const previousTotal = assessments[i + 1].dimensions as any.reduce((sum: number, d: any) => sum + d.score, 0)
     if (currentTotal > previousTotal) {
       streak++
     } else {
@@ -455,10 +455,10 @@ function hasAcceleratedGrowth(recentNotes: unknown[], allNotes: unknown[]): bool
   const twoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, now.getDate())
   
   const lastMonthNotes = allNotes.filter((note: unknown) => 
-    new Date(note.created_at) >= oneMonthAgo && new Date(note.created_at) < now
+    new Date(note.created_at as any) >= oneMonthAgo && new Date(note.created_at as any) < now
   )
   const prevMonthNotes = allNotes.filter((note: unknown) => 
-    new Date(note.created_at) >= twoMonthsAgo && new Date(note.created_at) < oneMonthAgo
+    new Date(note.created_at as any) >= twoMonthsAgo && new Date(note.created_at as any) < oneMonthAgo
   )
   
   if (prevMonthNotes.length === 0) return lastMonthNotes.length > 0
@@ -475,10 +475,10 @@ function getGrowthRate(recentNotes: unknown[], allNotes: unknown[]): number {
   const twoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, now.getDate())
   
   const lastMonthNotes = allNotes.filter((note: unknown) => 
-    new Date(note.created_at) >= oneMonthAgo && new Date(note.created_at) < now
+    new Date(note.created_at as any) >= oneMonthAgo && new Date(note.created_at as any) < now
   )
   const prevMonthNotes = allNotes.filter((note: unknown) => 
-    new Date(note.created_at) >= twoMonthsAgo && new Date(note.created_at) < oneMonthAgo
+    new Date(note.created_at as any) >= twoMonthsAgo && new Date(note.created_at as any) < oneMonthAgo
   )
   
   if (prevMonthNotes.length === 0) return lastMonthNotes.length > 0 ? 100 : 0
@@ -497,7 +497,7 @@ function hasEarlyBirdPattern(notes: unknown[]): boolean {
   
   let earlyBirdCount = 0
   for (const note of notes) {
-    const hour = new Date(note.created_at).getHours()
+    const hour = new Date(note.created_at as any).getHours()
     if (hour < 8) {
       earlyBirdCount++
       if (earlyBirdCount >= 7) return true
@@ -513,7 +513,7 @@ function getEarlyBirdDays(notes: unknown[]): number {
   let currentStreak = 0
   
   for (const note of notes.reverse()) { // 从最早到最新
-    const hour = new Date(note.created_at).getHours()
+    const hour = new Date(note.created_at as any).getHours()
     if (hour < 8) {
       currentStreak++
       maxEarlyBirdStreak = Math.max(maxEarlyBirdStreak, currentStreak)
@@ -531,7 +531,7 @@ function hasNightOwlPattern(notes: unknown[]): boolean {
   
   let nightOwlCount = 0
   for (const note of notes) {
-    const hour = new Date(note.created_at).getHours()
+    const hour = new Date(note.created_at as any).getHours()
     if (hour >= 23) {
       nightOwlCount++
       if (nightOwlCount >= 7) return true
@@ -547,7 +547,7 @@ function getNightOwlDays(notes: unknown[]): number {
   let currentStreak = 0
   
   for (const note of notes.reverse()) { // 从最早到最新
-    const hour = new Date(note.created_at).getHours()
+    const hour = new Date(note.created_at as any).getHours()
     if (hour >= 23) {
       currentStreak++
       maxNightOwlStreak = Math.max(maxNightOwlStreak, currentStreak)
@@ -600,7 +600,7 @@ function hasHighOutputDay(notes: unknown[]): boolean {
   // 检查是否有某一天写了3篇以上笔记
   const notesByDate: Record<string, number> = {}
   for (const note of notes) {
-    const date = new Date(note.created_at).toDateString()
+    const date = new Date(note.created_at as any).toDateString()
     notesByDate[date] = (notesByDate[date] || 0) + 1
   }
   
@@ -610,7 +610,7 @@ function hasHighOutputDay(notes: unknown[]): boolean {
 function getMaxDailyNotes(notes: unknown[]): number {
   const notesByDate: Record<string, number> = {}
   for (const note of notes) {
-    const date = new Date(note.created_at).toDateString()
+    const date = new Date(note.created_at as any).toDateString()
     notesByDate[date] = (notesByDate[date] || 0) + 1
   }
   
