@@ -223,7 +223,7 @@ export default function GrowthReportPage() {
                 />
                 <Tooltip 
                   contentStyle={{ 
-                    background: 'var(--bg-card)', 
+                    background: 'var(--bg-elevated)', 
                     border: '1px solid var(--border-subtle)',
                     borderRadius: '8px',
                     fontSize: '12px'
@@ -234,7 +234,7 @@ export default function GrowthReportPage() {
               </RadarChart>
             </ResponsiveContainer>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
             {aiScores.map((dim: DimensionScore, index: number) => (
               <div key={index} className="p-3 rounded-lg" style={{ background: 'var(--bg-elevated)' }}>
                 <div className="flex items-center justify-between mb-1">
@@ -257,25 +257,46 @@ export default function GrowthReportPage() {
       {monthlyTrends.length > 0 ? (
         <div className="card mb-8 p-6">
           <h2 className="text-xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>📈 月度趋势</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={monthlyTrends}>
-              <XAxis dataKey="period" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-              <YAxis yAxisId="left" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-              <YAxis yAxisId="right" orientation="right" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={monthlyTrends}>
+              <XAxis 
+                dataKey="period" 
+                tick={{ fill: 'var(--text-tertiary)', fontSize: 11 }} 
+                tickLine={false}
+                axisLine={{ stroke: 'var(--border-subtle)' }}
+              />
+              <YAxis 
+                tick={{ fill: 'var(--text-tertiary)', fontSize: 11 }}
+                tickLine={false}
+                axisLine={{ stroke: 'var(--border-subtle)' }}
+              />
               <Tooltip
                 contentStyle={{ 
-                  background: 'var(--bg-card)', 
+                  background: 'var(--bg-elevated)', 
                   border: '1px solid var(--border-subtle)',
                   borderRadius: '8px',
                   fontSize: '12px'
                 }}
-                labelStyle={{ color: 'var(--text-primary)' }}
               />
-              <Legend wrapperStyle={{ fontSize: '12px' }} />
-              <Bar yAxisId="left" name="笔记数" dataKey="notes" fill="var(--accent)" radius={[4, 4, 0, 0]} />
-              <Bar yAxisId="left" name="字数" dataKey="words" fill="var(--info)" radius={[4, 4, 0, 0]} />
-              <Line yAxisId="right" name="均分" type="monotone" dataKey="avgScore" stroke="var(--success)" strokeWidth={2} dot={{ r: 4 }} />
-            </BarChart>
+              <Line 
+                name="笔记数" 
+                type="monotone" 
+                dataKey="notes" 
+                stroke="var(--accent)" 
+                strokeWidth={2} 
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+              <Line 
+                name="均分" 
+                type="monotone" 
+                dataKey="avgScore" 
+                stroke="var(--success)" 
+                strokeWidth={2} 
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+            </LineChart>
           </ResponsiveContainer>
         </div>
       ) : (
