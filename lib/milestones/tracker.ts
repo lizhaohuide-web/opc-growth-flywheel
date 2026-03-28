@@ -322,8 +322,8 @@ export async function checkBadges(userId: string): Promise<Badge[]> {
       category: 'special',
       icon: '🚀',
       description: '使用 OPC 增长飞轮超过 90 天',
-      achieved: hasLongUsage(supabase, userId, 90),
-      progress: await getUsageDays(supabase, userId),
+      achieved: false,
+      progress: 1,
       target: 90
     }
   ]
