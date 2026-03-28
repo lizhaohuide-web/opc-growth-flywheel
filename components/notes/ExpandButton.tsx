@@ -2,10 +2,11 @@
 import { marked } from 'marked'
 
 export default function ExpandButton({ fullContent }: { fullContent: string }) {
-  const handleExpand = () => {
+  const handleExpand = async () => {
     const contentDiv = document.getElementById('note-content')
     if (contentDiv) {
-      contentDiv.innerHTML = marked(fullContent)
+      const html = await marked(fullContent)
+      contentDiv.innerHTML = html
     }
     const expandBtn = document.getElementById('expand-btn')
     if (expandBtn) expandBtn.remove()
