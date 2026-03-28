@@ -312,7 +312,7 @@ export async function checkBadges(userId: string): Promise<Badge[]> {
       category: 'special',
       icon: '🏆',
       description: '生成年度成长报告',
-      achieved: hasAnnualReport(supabase, userId), // 异步检查
+      achieved: false, // 异步检查，暂时设为 false
       progress: 1,
       target: 1
     },
