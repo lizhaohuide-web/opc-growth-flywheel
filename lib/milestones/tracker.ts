@@ -388,7 +388,7 @@ function getBalancedDimensions(assessments: unknown[]): number {
 
 function hasSignificantImprovement(assessments: unknown[]): boolean {
   if (assessments.length < 2) return false
-  const [current, previous] = assessments
+  const [current, previous] = assessments as any[]
   if (!current.dimensions || !previous.dimensions) return false
   
   // 检查是否有任一维度从≤4提升到≥7
@@ -404,7 +404,7 @@ function hasSignificantImprovement(assessments: unknown[]): boolean {
 
 function getImprovedDimensions(assessments: unknown[]): number {
   if (assessments.length < 2) return 0
-  const [current, previous] = assessments
+  const [current, previous] = assessments as any[]
   if (!current.dimensions || !previous.dimensions) return 0
   
   let improvements = 0
