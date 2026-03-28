@@ -47,7 +47,7 @@ export default function WeeklyReportPage() {
       })
 
       const chartData = Object.entries(dailyMap).map(([name, data]) => ({
-        name, 笔记数：data.count, 字数：data.words
+        name, notes: data.count, words: data.words
       }))
 
       const tagCount: Record<string, number> = {}
@@ -133,8 +133,8 @@ export default function WeeklyReportPage() {
                 }}
               />
               <Legend />
-              <Bar yAxisId="left" dataKey="笔记数" fill="var(--accent)" />
-              <Bar yAxisId="right" dataKey="字数" fill="var(--success)" />
+              <Bar yAxisId="left" dataKey="notes" fill="var(--accent)" />
+              <Bar yAxisId="right" dataKey="words" fill="var(--success)" />
             </BarChart>
           </ResponsiveContainer>
         </div>

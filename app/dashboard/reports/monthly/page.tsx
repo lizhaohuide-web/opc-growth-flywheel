@@ -112,14 +112,14 @@ export default function MonthlyReportPage() {
 
   const trendData = report.trends.weeks.map((week) => ({
     name: week.week.split(' - ')[0],
-    笔记数：week.notes,
-    字数：week.words
+    notes: week.notes,
+    words: week.words
   }))
 
   const radarData = report.wheelComparison.current.map((dimension) => ({
     subject: dimension.name,
-    本月：dimension.score,
-    上月：report.wheelComparison.previous 
+    current: dimension.score,
+    previous: report.wheelComparison.previous 
       ? report.wheelComparison.previous.find((prev) => prev.name === dimension.name)?.score || 0
       : 0
   }))
@@ -215,8 +215,8 @@ export default function MonthlyReportPage() {
                 }}
               />
               <Legend />
-              <Line type="monotone" dataKey="笔记数" stroke="var(--accent)" activeDot={{ r: 8 }} strokeWidth={2} />
-              <Line type="monotone" dataKey="字数" stroke="var(--success)" strokeWidth={2} />
+              <Line type="monotone" dataKey="notes" stroke="var(--accent)" activeDot={{ r: 8 }} strokeWidth={2} />
+              <Line type="monotone" dataKey="words" stroke="var(--success)" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -231,9 +231,9 @@ export default function MonthlyReportPage() {
               <PolarGrid stroke="var(--border-subtle)" />
               <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
               <PolarRadiusAxis angle={30} domain={[0, 10]} tick={{ fill: 'var(--text-secondary)', fontSize: 10 }} />
-              <Radar name="本月" dataKey="本月" stroke="var(--accent)" fill="var(--accent)" fillOpacity={0.5} />
+              <Radar name="本月" dataKey="current" stroke="var(--accent)" fill="var(--accent)" fillOpacity={0.5} />
               {report.wheelComparison.previous && (
-                <Radar name="上月" dataKey="上月" stroke="var(--warning)" fill="var(--warning)" fillOpacity={0.3} />
+                <Radar name="上月" dataKey="previous" stroke="var(--warning)" fill="var(--warning)" fillOpacity={0.3} />
               )}
             </RadarChart>
           </ResponsiveContainer>
