@@ -373,17 +373,17 @@ function getModelCount(notes: Array<{ models?: string[] }>): number {
 function hasBalancedWheel(assessments: unknown[]): boolean {
   // 检查最近一次评估是否8个维度都≥5
   if (assessments.length === 0) return false
-  const latestAssessment = assessments[0]
+  const latestAssessment = assessments[0] as any
   // 假设assessment有一个dimensions字段
   if (!latestAssessment.dimensions) return false
-  return latestAssessment.dimensions.every((d: unknown) => d.score >= 5)
+  return latestAssessment.dimensions.every((d: any) => d.score >= 5)
 }
 
 function getBalancedDimensions(assessments: unknown[]): number {
   if (assessments.length === 0) return 0
-  const latestAssessment = assessments[0]
+  const latestAssessment = assessments[0] as any
   if (!latestAssessment.dimensions) return 0
-  return latestAssessment.dimensions.filter((d: unknown) => d.score >= 5).length
+  return latestAssessment.dimensions.filter((d: any) => d.score >= 5).length
 }
 
 function hasSignificantImprovement(assessments: unknown[]): boolean {
