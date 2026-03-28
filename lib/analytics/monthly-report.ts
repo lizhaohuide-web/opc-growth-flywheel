@@ -122,7 +122,7 @@ export async function generateMonthlyReport(userId: string): Promise<MonthlyRepo
     .gte('created_at', startOfMonth.toISOString())
     .lte('created_at', endOfMonth.toISOString())
 
-  const platformsUsed = [...new Set(generatedContents?.map((gc) => gc.platform) || [])]
+  const platformsUsed = Array.from(new Set(generatedContents?.map((gc) => gc.platform) || []))
 
   // 生成AI分析
   const aiAnalysis = await generateAIAnalysis(notes || [], currentWheel)
