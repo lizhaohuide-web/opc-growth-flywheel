@@ -15,6 +15,25 @@ export default function EditNotePage() {
   const router = useRouter()
   const params = useParams()
   
+  // 处理图片上传
+  const handleImageUpload = async (file: File): Promise<string> => {
+    const formData = new FormData()
+    formData.append('file', file)
+    
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    })
+    
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error || '上传失败')
+    }
+    
+    const data = await response.json()
+    return data.url
+  }
+
   useEffect(() => {
     const fetchNote = async () => {
       const { data } = await supabase
@@ -86,7 +105,12 @@ export default function EditNotePage() {
         
         <TagInput tags={tags} onChange={setTags} />
         
-        <MarkdownEditor value={content} onChange={setContent} />
+        <RichMarkdownEditor 
+          value={content} 
+          onChange={setContent}
+          onImageUpload={handleImageUpload}
+          placeholder="使用 Markdown 记录你的思考，支持拖拽上传图片..."
+        />
         
         <div className="flex gap-4">
           <button onClick={handleSave} disabled={saving} className="btn-primary">

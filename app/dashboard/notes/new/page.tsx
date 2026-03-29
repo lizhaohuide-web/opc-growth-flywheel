@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import TagInput from '@/components/notes/TagInput'
-import MarkdownEditor from '@/components/notes/MarkdownEditor'
+import RichMarkdownEditor from '@/components/notes/RichMarkdownEditor'
 import GuidedNoteForm from '@/components/notes/GuidedNoteForm'
 
 export default function NewNotePage() {
@@ -16,6 +16,25 @@ export default function NewNotePage() {
   const supabase = createClient()
   const router = useRouter()
   
+  // 处理图片上传
+  const handleImageUpload = async (file: File): Promise<string> => {
+    const formData = new FormData()
+    formData.append('file', file)
+    
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    })
+    
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error || '上传失败')
+    }
+    
+    const data = await response.json()
+    return data.url
+  }
+
   const handleSave = async () => {
     if (!title.trim() && !content.trim()) {
       alert('请填写标题或内容')
