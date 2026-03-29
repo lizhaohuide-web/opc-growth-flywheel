@@ -19,13 +19,13 @@ export default function Home() {
             </span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight">
             <span className="text-gradient">OPC</span> 增长飞轮
           </h1>
-          <p className="text-2xl mb-4 font-light" style={{ color: 'var(--text-primary)' }}>
+          <p className="text-xl sm:text-2xl mb-4 font-light" style={{ color: 'var(--text-primary)' }}>
             把思考变成收入
           </p>
-          <p className="text-base mb-12 max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm sm:text-base mb-12 max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
             记录每日成长，AI 智能摘要，一键生成多平台内容，追踪成长轨迹
           </p>
           
@@ -43,19 +43,19 @@ export default function Home() {
       {/* Features Section */}
       <section className="py-24" style={{ background: 'var(--bg-secondary)' }}>
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-display font-bold text-center mb-4">核心功能</h2>
-          <p className="text-center mb-16" style={{ color: 'var(--text-tertiary)' }}>成长看得见 · 内容能变现 · 提升更高效</p>
+          <h2 className="text-2xl sm:text-3xl font-display font-bold text-center mb-4">核心功能</h2>
+          <p className="text-sm sm:text-base text-center mb-16" style={{ color: 'var(--text-tertiary)' }}>成长看得见 · 内容能变现 · 提升更高效</p>
           
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { icon: '✦', title: '今日笔记', desc: 'Markdown 编辑器 + 18 种引导模板，让记录更简单' },
               { icon: '◈', title: '内容变形器', desc: '一键生成公众号、小红书、短视频文案，多平台分发' },
               { icon: '↗', title: '成长分析', desc: 'AI 质量评分 + 人生之轮 + 周月报，让成长看得见' },
             ].map((f, i) => (
-              <div key={i} className="card p-8 text-center group animate-enter" style={{ animationDelay: `${i * 0.1}s` }}>
-                <div className="text-3xl mb-4 text-gradient">{f.icon}</div>
-                <h3 className="text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>{f.title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{f.desc}</p>
+              <div key={i} className="card p-6 sm:p-8 text-center group animate-enter" style={{ animationDelay: `${i * 0.1}s` }}>
+                <div className="text-3xl sm:text-4xl mb-4 text-gradient">{f.icon}</div>
+                <h3 className="text-base sm:text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>{f.title}</h3>
+                <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{f.desc}</p>
               </div>
             ))}
           </div>
@@ -68,10 +68,10 @@ export default function Home() {
           background: `linear-gradient(135deg, var(--accent) 0%, transparent 60%)`
         }}></div>
         <div className="max-w-4xl mx-auto text-center px-4 relative z-10">
-          <h2 className="text-3xl font-display font-bold mb-6">
+          <h2 className="text-2xl sm:text-3xl font-display font-bold mb-6">
             开始你的成长之旅
           </h2>
-          <p className="text-lg mb-10" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm sm:text-lg mb-10" style={{ color: 'var(--text-secondary)' }}>
             每天 10 分钟，记录思考，生成内容，建立个人影响力
           </p>
           <Link href="/auth/register" className="btn-primary px-10 py-4 rounded-xl text-base glow-accent inline-block">

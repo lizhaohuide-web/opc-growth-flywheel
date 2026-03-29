@@ -8,6 +8,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // 响应式断点（移动端优先）
+      screens: {
+        'sm': '640px',   // 大屏手机
+        'md': '768px',   // 平板
+        'lg': '1024px',  // 小屏电脑
+        'xl': '1280px',  // 桌面
+        '2xl': '1536px', // 大屏
+      },
       fontFamily: {
         display: ['var(--font-display)', 'Georgia', 'serif'],
         body: ['var(--font-body)', 'system-ui', 'sans-serif'],

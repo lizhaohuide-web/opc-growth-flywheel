@@ -69,6 +69,27 @@
     background: var(--accent);
     color: var(--bg-primary);
   }
+
+  /* 移动端优化 */
+  @media (max-width: 768px) {
+    html {
+      /* 防止 iOS 缩放 */
+      text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
+    
+    body {
+      /* 触摸优化 */
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    
+    /* 按钮和链接的点击区域优化 */
+    button, a {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
 }
 
 @layer components {

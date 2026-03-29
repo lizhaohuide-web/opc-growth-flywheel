@@ -24,6 +24,8 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "OPC 增长飞轮 — 成长看得见",
   description: "OPC 增长飞轮",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes",
+  themeColor: "#1a1a22",
 };
 
 export default function RootLayout({
