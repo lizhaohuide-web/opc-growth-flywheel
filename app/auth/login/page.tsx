@@ -103,13 +103,24 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full flex justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? '登录中...' : '登录'}
-            </button>
+            <div className="flex justify-between items-center">
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn-primary flex-1 mr-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? '登录中...' : '登录'}
+              </button>
+              <Link 
+                href="/auth/forgot-password" 
+                className="text-sm transition-colors"
+                style={{ color: 'var(--text-tertiary)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-tertiary)')}
+              >
+                忘记密码？
+              </Link>
+            </div>
           </form>
           
           <div className="text-center text-sm" style={{ color: 'var(--text-tertiary)' }}>
