@@ -109,8 +109,7 @@ export default function EditNotePage() {
         <RichMarkdownEditor 
           value={content} 
           onChange={setContent}
-          onImageUpload={handleImageUpload}
-          placeholder="使用 Markdown 记录你的思考，支持拖拽上传图片..."
+          placeholder="使用 Markdown 记录你的思考..."
         />
         
         <div className="flex gap-4">
