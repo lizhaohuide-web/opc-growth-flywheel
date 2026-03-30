@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { questionTemplates, QuestionTemplate, QuestionField } from '@/lib/templates/question-templates'
+import AIQuestioner from './AIQuestioner'
 
 export default function GuidedNoteForm() {
   const [selectedTemplate, setSelectedTemplate] = useState<string>('')
@@ -428,6 +429,18 @@ export default function GuidedNoteForm() {
                     {validationErrors[selectedTemplateData.fields[currentStep].id]}
                   </div>
                 )}
+                
+                {/* AI 智能追问 */}
+                <AIQuestioner
+                  templateName={selectedTemplateData.name}
+                  fieldName={selectedTemplateData.fields[currentStep].label}
+                  userAnswer={answers[selectedTemplateData.fields[currentStep].id] || ''}
+                  previousAnswers={Object.fromEntries(
+                    selectedTemplateData.fields
+                      .slice(0, currentStep)
+                      .map(field => [field.label, answers[field.id] || ''])
+                  )}
+                />
               </div>
             )}
             

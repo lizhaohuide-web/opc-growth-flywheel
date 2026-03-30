@@ -6,6 +6,9 @@ import Link from 'next/link'
 import TagInput from '@/components/notes/TagInput'
 import RichMarkdownEditor from '@/components/notes/RichMarkdownEditor'
 import GuidedNoteForm from '@/components/notes/GuidedNoteForm'
+import VoiceInput from '@/components/notes/VoiceInput'
+import AutoFormat from '@/components/notes/AutoFormat'
+import SmartHint from '@/components/notes/SmartHint'
 
 export default function NewNotePage() {
   const [title, setTitle] = useState('')
@@ -15,25 +18,6 @@ export default function NewNotePage() {
   const [useGuided, setUseGuided] = useState(false)
   const supabase = createClient()
   const router = useRouter()
-  
-  // 处理图片上传
-  const handleImageUpload = async (file: File): Promise<string> => {
-    const formData = new FormData()
-    formData.append('file', file)
-    
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    })
-    
-    if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.error || '上传失败')
-    }
-    
-    const data = await response.json()
-    return data.url
-  }
 
   const handleSave = async () => {
     if (!title.trim() && !content.trim()) {
@@ -159,10 +143,25 @@ export default function NewNotePage() {
           
           {/* Markdown 编辑器 */}
           <div className="card p-6">
-            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
-              内容
-            </label>
-            <MarkdownEditor value={content} onChange={setContent} />
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                内容
+              </label>
+              <div className="flex items-center gap-2">
+                <VoiceInput
+                  onTranscript={(text) => setContent(content + (content ? '\n\n' : '') + text)}
+                />
+                <AutoFormat
+                  content={content}
+                  onFormatted={setContent}
+                />
+              </div>
+            </div>
+            <RichMarkdownEditor 
+              value={content} 
+              onChange={setContent}
+              placeholder="使用 Markdown 记录你的思考，支持语音输入..."
+            />
           </div>
         </div>
         
@@ -213,6 +212,14 @@ export default function NewNotePage() {
               <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>• ORID 焦点讨论</div>
               <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>• 每日感恩</div>
             </div>
+          </div>
+          
+          {/* AI 智能提示 */}
+          <div className="card p-6">
+            <h3 className="font-semibold mb-3 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+              <span>💡</span> AI 智能提示
+            </h3>
+            <SmartHint content={content} mode="free" />
           </div>
           
           {/* Markdown 语法提示 */}

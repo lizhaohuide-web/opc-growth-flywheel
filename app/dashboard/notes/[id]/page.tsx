@@ -6,6 +6,7 @@ import AISummaryButton from '@/components/notes/AISummaryButton'
 import FavoriteButton from '@/components/notes/FavoriteButton'
 import LongContentRenderer from '@/components/notes/LongContentRenderer'
 import AIAssistantWrapper from '@/components/notes/AIAssistantWrapper'
+import NoteQualityFeedback from './NoteQualityFeedback'
 
 export default async function NotePage({ params }: { params: { id: string } }) {
   const supabase = await createClient()
@@ -110,6 +111,13 @@ export default async function NotePage({ params }: { params: { id: string } }) {
       </div>
       
       <AIAssistantWrapper noteId={note.id} noteContent={note.content || ''} noteTitle={note.title || ''} />
+      
+      {/* 质量反馈 */}
+      <NoteQualityFeedback
+        noteId={note.id}
+        title={note.title || '无标题'}
+        content={note.content || ''}
+      />
     </div>
   )
 }

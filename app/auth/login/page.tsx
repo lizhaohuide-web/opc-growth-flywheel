@@ -103,14 +103,15 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex justify-between items-center">
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-primary flex-1 mr-4 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? '登录中...' : '登录'}
-              </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full flex justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? '登录中...' : '登录'}
+            </button>
+            
+            <div className="text-center">
               <Link 
                 href="/auth/forgot-password" 
                 className="text-sm transition-colors"

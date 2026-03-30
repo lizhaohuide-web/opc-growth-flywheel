@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter, useParams } from 'next/navigation'
 import TagInput from '@/components/notes/TagInput'
-import MarkdownEditor from '@/components/notes/MarkdownEditor'
+import RichMarkdownEditor from '@/components/notes/RichMarkdownEditor'
 
 export default function EditNotePage() {
   const [title, setTitle] = useState('')
@@ -69,6 +69,7 @@ export default function EditNotePage() {
     } else {
       // 清除生命之轮缓存，触发重新分析
       fetch('/api/reports/wheel-score', { method: 'POST' }).catch(() => {})
+      // 跳转到笔记详情页（质量反馈在详情页显示）
       router.push(`/dashboard/notes/${params.id}`)
     }
     setSaving(false)

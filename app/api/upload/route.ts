@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
     const filePath = `note-images/${fileName}`
 
     // 上传到 Supabase Storage
+    console.log('开始上传到 Supabase Storage:', filePath)
     const { data, error } = await supabase.storage
       .from('note-images')
       .upload(filePath, file, {
@@ -54,17 +55,32 @@ export async function POST(request: NextRequest) {
       })
 
     if (error) {
-      console.error('上传失败:', error)
+      console.error('Supabase Storage 上传失败:', error)
+      
+      // 如果是存储桶不存在，尝试创建（需要权限）或返回 Base64 方案
+      if (error.message.includes('not found') || error.message.includes('Not found')) {
+        console.log('存储桶不存在，降级到 Base64 方案')
+        // 返回信号让前端使用 Base64
+        return NextResponse.json({
+          useBase64: true,
+          note: '存储桶未配置，请使用 Base64 方式'
+        })
+      }
+      
       return NextResponse.json(
         { error: '上传失败：' + error.message },
         { status: 500 }
       )
     }
 
+    console.log('上传成功:', data)
+    
     // 获取公开访问 URL
     const { data: { publicUrl } } = supabase.storage
       .from('note-images')
       .getPublicUrl(filePath)
+
+    console.log('公开 URL:', publicUrl)
 
     return NextResponse.json({
       url: publicUrl,

@@ -76,7 +76,7 @@ export default function RegisterPage() {
             
             <div className="space-y-4">
               <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-[var(--text-primary)]">
+                <label htmlFor="fullName" className="block text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
                   姓名
                 </label>
                 <input
@@ -86,13 +86,20 @@ export default function RegisterPage() {
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-[var(--border-subtle)] rounded-md shadow-sm focus:outline-none focus:ring-[var(--accent)] focus:border-[var(--accent)]"
+                  className="w-full px-4 py-2.5 rounded-lg text-sm outline-none transition-all"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border-subtle)',
+                    color: 'var(--text-primary)',
+                  }}
                   placeholder="张三"
+                  onFocus={e => e.currentTarget.style.borderColor = 'var(--border-accent)'}
+                  onBlur={e => e.currentTarget.style.borderColor = 'var(--border-subtle)'}
                 />
               </div>
               
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-[var(--text-primary)]">
+                <label htmlFor="email" className="block text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
                   邮箱
                 </label>
                 <input
@@ -103,13 +110,20 @@ export default function RegisterPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-[var(--border-subtle)] rounded-md shadow-sm focus:outline-none focus:ring-[var(--accent)] focus:border-[var(--accent)]"
+                  className="w-full px-4 py-2.5 rounded-lg text-sm outline-none transition-all"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border-subtle)',
+                    color: 'var(--text-primary)',
+                  }}
                   placeholder="your@email.com"
+                  onFocus={e => e.currentTarget.style.borderColor = 'var(--border-accent)'}
+                  onBlur={e => e.currentTarget.style.borderColor = 'var(--border-subtle)'}
                 />
               </div>
               
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-[var(--text-primary)]">
+                <label htmlFor="password" className="block text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
                   密码（至少 8 位）
                 </label>
                 <input
@@ -121,8 +135,15 @@ export default function RegisterPage() {
                   minLength={8}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-[var(--border-subtle)] rounded-md shadow-sm focus:outline-none focus:ring-[var(--accent)] focus:border-[var(--accent)]"
+                  className="w-full px-4 py-2.5 rounded-lg text-sm outline-none transition-all"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border-subtle)',
+                    color: 'var(--text-primary)',
+                  }}
                   placeholder="••••••••"
+                  onFocus={e => e.currentTarget.style.borderColor = 'var(--border-accent)'}
+                  onBlur={e => e.currentTarget.style.borderColor = 'var(--border-subtle)'}
                 />
               </div>
             </div>
