@@ -20,37 +20,47 @@ export default function NewNotePage() {
   const router = useRouter()
 
   const handleSave = async () => {
+    // 防止重复提交
+    if (loading) return
+    
     if (!title.trim() && !content.trim()) {
       alert('请填写标题或内容')
       return
     }
     
     setLoading(true)
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) {
-      alert('请先登录')
-      setLoading(false)
-      return
-    }
-    
-    const { error } = await supabase
-      .from('notes')
-      .insert({ 
-        user_id: user.id,
-        title: title.trim() || '无标题笔记',
-        content,
-        tags
-      })
-    
-    if (error) {
-      alert(error.message)
-    } else {
-      // 清除生命之轮缓存，触发重新分析
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) {
+        alert('请先登录')
+        setLoading(false)
+        return
+      }
+      
+      const { error } = await supabase
+        .from('notes')
+        .insert({ 
+          user_id: user.id,
+          title: title.trim() || '无标题笔记',
+          content,
+          tags
+        })
+      
+      if (error) {
+        throw error
+      }
+      
+      // 清除缓存（后台执行，不阻塞）
       fetch('/api/reports/wheel-score', { method: 'POST' }).catch(() => {})
+      
+      // 立即跳转，提升体验
       router.push('/dashboard/notes')
+    } catch (error) {
+      console.error('保存失败:', error)
+      alert(`保存失败：${error instanceof Error ? error.message : '未知错误'}`)
+      setLoading(false)
     }
-    setLoading(false)
   }
   
   if (useGuided) {

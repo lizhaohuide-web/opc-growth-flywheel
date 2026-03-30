@@ -1,0 +1,5 @@
+skills/baoyu-skills/
+.git/
+node_modules/
+*.md
+!README.md

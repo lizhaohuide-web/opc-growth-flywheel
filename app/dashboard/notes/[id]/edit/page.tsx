@@ -53,26 +53,35 @@ export default function EditNotePage() {
   }, [params.id, supabase])
   
   const handleSave = async () => {
-    setSaving(true)
-    const { error } = await supabase
-      .from('notes')
-      .update({ 
-        title, 
-        content, 
-        tags,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', params.id)
+    // 防止重复提交
+    if (saving) return
     
-    if (error) {
-      alert(error.message)
-    } else {
-      // 清除生命之轮缓存，触发重新分析
+    setSaving(true)
+    try {
+      const { error } = await supabase
+        .from('notes')
+        .update({ 
+          title, 
+          content, 
+          tags,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', params.id)
+      
+      if (error) {
+        throw error
+      }
+      
+      // 清除缓存（后台执行）
       fetch('/api/reports/wheel-score', { method: 'POST' }).catch(() => {})
-      // 跳转到笔记详情页（质量反馈在详情页显示）
+      
+      // 立即跳转
       router.push(`/dashboard/notes/${params.id}`)
+    } catch (error) {
+      console.error('保存失败:', error)
+      alert(`保存失败：${error instanceof Error ? error.message : '未知错误'}`)
+      setSaving(false)
     }
-    setSaving(false)
   }
   
   if (loading) return (
