@@ -19,6 +19,19 @@ interface AIVersion {
     image_urls?: string[] | string
     image_prompts?: string[] | string
     titles?: string
+    title?: string
+    scenes?: string[] | string
+    subtitles?: string[] | string
+    tags?: string[] | string
+    bgm?: string
+    cover_url?: string
+    summary?: string
+    illustrations?: string[] | string
+    format?: string
+    duration?: string
+    opening?: string
+    outline?: string[] | string
+    closing?: string
     [key: string]: unknown
   }
   created_at: string
@@ -35,6 +48,7 @@ const platformIcons: Record<string, string> = {
   moments: '💬',
   'short-video': '🎬',
   podcast: '🎙️',
+  custom: '✨',
 }
 
 const platformNames: Record<string, string> = {
@@ -43,6 +57,148 @@ const platformNames: Record<string, string> = {
   moments: '朋友圈',
   'short-video': '短视频',
   podcast: '播客',
+  custom: '自定义',
+}
+
+// Helper functions
+function getImageUrls(version: AIVersion): string[] {
+  let imageUrls: string[] = []
+  if (typeof version.metadata?.image_urls === 'string') {
+    try {
+      imageUrls = JSON.parse(version.metadata.image_urls)
+    } catch (e) {
+      imageUrls = []
+    }
+  } else if (Array.isArray(version.metadata?.image_urls)) {
+    imageUrls = version.metadata.image_urls
+  } else if (typeof version.image_urls === 'string') {
+    try {
+      imageUrls = JSON.parse(version.image_urls)
+    } catch (e) {
+      imageUrls = []
+    }
+  }
+  return imageUrls
+}
+
+function downloadImage(url: string, filename: string) {
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  link.click()
+}
+
+function parseTitleFromContent(content: string): string {
+  const lines = content.split('\n')
+  return lines[0]?.replace(/^[#*]+\s*/, '') || ''
+}
+
+function formatScenes(scenes: string[] | string): string {
+  if (Array.isArray(scenes)) {
+    return scenes.join('\n\n')
+  }
+  return scenes || ''
+}
+
+function formatSubtitles(subtitles: string[] | string): string {
+  if (Array.isArray(subtitles)) {
+    return subtitles.join('\n')
+  }
+  return subtitles || ''
+}
+
+function formatTags(tags: string[] | string): string {
+  if (Array.isArray(tags)) {
+    return tags.join(' ')
+  }
+  return tags || ''
+}
+
+function formatOutline(outline: string[] | string): string {
+  if (Array.isArray(outline)) {
+    return outline.map((item, i) => `${i + 1}. ${item}`).join('\n')
+  }
+  return outline || ''
+}
+
+// Section component
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  const content = typeof children === 'string' ? children : String(children || '')
+  if (!content.trim()) return null
+  
+  return (
+    <div className="mb-6">
+      <h4 className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+        {title}
+      </h4>
+      <div
+        className="p-4 rounded-lg whitespace-pre-wrap"
+        style={{
+          background: 'var(--bg-primary)',
+          border: '1px solid var(--border-subtle)',
+        }}
+      >
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-primary)' }}>
+          {content}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// Image Section component
+function ImageSection({
+  title,
+  imageUrls,
+  onDownload,
+}: {
+  title: string
+  imageUrls: string[]
+  onDownload: (url: string, index: number) => void
+}) {
+  if (!imageUrls || imageUrls.length === 0) return null
+
+  return (
+    <div className="mb-6">
+      <h4 className="text-sm font-medium mb-3" style={{ color: 'var(--text-secondary)' }}>
+        {title}（{imageUrls.length}张）
+      </h4>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {imageUrls.map((url, index) => (
+          <div key={index} className="space-y-2">
+            <div
+              className="aspect-square rounded-lg overflow-hidden"
+              style={{
+                background: 'var(--bg-primary)',
+                border: '1px solid var(--border-subtle)',
+              }}
+            >
+              {url ? (
+                <img src={url} alt={`图${index + 1}`} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                  图{index + 1}
+                </div>
+              )}
+            </div>
+            <a
+              href={url}
+              download={`image-${index + 1}.png`}
+              className="block w-full text-center text-xs px-2 py-1 rounded transition-colors"
+              style={{
+                background: 'var(--bg-elevated)',
+                color: 'var(--text-secondary)',
+              }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              ⬇️ 下载
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 export default function VersionsPage() {
@@ -210,23 +366,7 @@ export default function VersionsPage() {
                     {version.content?.substring(0, 150) || '无内容'}...
                   </p>
                   {(() => {
-                    // 兼容新旧格式
-                    let imageUrls: string[] = []
-                    if (typeof version.metadata?.image_urls === 'string') {
-                      try {
-                        imageUrls = JSON.parse(version.metadata.image_urls)
-                      } catch (e) {
-                        imageUrls = []
-                      }
-                    } else if (Array.isArray(version.metadata?.image_urls)) {
-                      imageUrls = version.metadata.image_urls
-                    } else if (typeof version.image_urls === 'string') {
-                      try {
-                        imageUrls = JSON.parse(version.image_urls)
-                      } catch (e) {
-                        imageUrls = []
-                      }
-                    }
+                    const imageUrls = getImageUrls(version)
                     
                     if (!imageUrls || imageUrls.length === 0) return null
                     
@@ -337,111 +477,137 @@ export default function VersionsPage() {
                 </div>
               )}
 
-              {/* 标题 */}
-              {(() => {
-                let title = ''
-                if (selectedVersion.metadata?.titles) {
-                  title = typeof selectedVersion.metadata.titles === 'string' 
-                    ? selectedVersion.metadata.titles 
-                    : ''
-                } else if (selectedVersion.titles) {
-                  title = selectedVersion.titles
-                }
-                
-                if (!title) return null
-                
-                return (
-                  <div className="mb-4">
-                    <h3 className="font-bold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>
-                      {title}
-                    </h3>
-                  </div>
-                )
-              })()}
+              {/* 小红书 */}
+              {selectedVersion.platform === 'xiaohongshu' && (
+                <>
+                  {(selectedVersion.metadata?.titles || selectedVersion.titles) && (
+                    <Section title="📌 标题">
+                      {selectedVersion.metadata?.titles || selectedVersion.titles}
+                    </Section>
+                  )}
+                  <Section title="📝 文案">{selectedVersion.content}</Section>
+                  <ImageSection
+                    title="🖼️ 配图"
+                    imageUrls={getImageUrls(selectedVersion)}
+                    onDownload={(url, index) => downloadImage(url, `xiaohongshu-image-${index + 1}.png`)}
+                  />
+                </>
+              )}
 
-              {/* 文案 */}
-              <div className="mb-6">
-                <h4 className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
-                  文案内容
-                </h4>
-                <div
-                  className="p-4 rounded-lg whitespace-pre-wrap"
-                  style={{
-                    background: 'var(--bg-primary)',
-                    border: '1px solid var(--border-subtle)',
-                  }}
-                >
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-primary)' }}>
-                    {selectedVersion.content}
-                  </p>
-                </div>
-              </div>
+              {/* 短视频 */}
+              {selectedVersion.platform === 'short-video' && (
+                <>
+                  {(selectedVersion.metadata?.title || parseTitleFromContent(selectedVersion.content)) && (
+                    <Section title="📌 标题">
+                      {selectedVersion.metadata?.title || parseTitleFromContent(selectedVersion.content)}
+                    </Section>
+                  )}
+                  <Section title="📝 脚本">{selectedVersion.content}</Section>
+                  {selectedVersion.metadata?.scenes && (
+                    <Section title="🎬 分镜">{formatScenes(selectedVersion.metadata.scenes)}</Section>
+                  )}
+                  {selectedVersion.metadata?.subtitles && (
+                    <Section title="🎞️ 字幕">{formatSubtitles(selectedVersion.metadata.subtitles)}</Section>
+                  )}
+                  {selectedVersion.metadata?.tags && (
+                    <Section title="🏷️ 标签">{formatTags(selectedVersion.metadata.tags)}</Section>
+                  )}
+                  {selectedVersion.metadata?.bgm && (
+                    <Section title="🎵 BGM 建议">{selectedVersion.metadata.bgm}</Section>
+                  )}
+                </>
+              )}
 
-              {/* 图片 */}
-              <div className="mb-6">
-                <h4 className="text-sm font-medium mb-3" style={{ color: 'var(--text-secondary)' }}>
-                  配图
-                </h4>
-                {(() => {
-                  // 兼容新旧格式
-                  let imageUrls: string[] = []
-                  if (typeof selectedVersion.metadata?.image_urls === 'string') {
-                    try {
-                      imageUrls = JSON.parse(selectedVersion.metadata.image_urls)
-                    } catch (e) {
-                      imageUrls = []
-                    }
-                  } else if (Array.isArray(selectedVersion.metadata?.image_urls)) {
-                    imageUrls = selectedVersion.metadata.image_urls
-                  } else if (typeof selectedVersion.image_urls === 'string') {
-                    try {
-                      imageUrls = JSON.parse(selectedVersion.image_urls)
-                    } catch (e) {
-                      imageUrls = []
-                    }
-                  }
-                  
-                  if (!imageUrls || imageUrls.length === 0) {
-                    return <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>暂无配图</p>
-                  }
-                  return (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {imageUrls.map((url, index) => (
-                        <div key={index} className="space-y-2">
-                          <div
-                            className="aspect-square rounded-lg overflow-hidden"
-                            style={{
-                              background: 'var(--bg-primary)',
-                              border: '1px solid var(--border-subtle)',
-                            }}
-                          >
-                            {url ? (
-                              <img src={url} alt={`图${index + 1}`} className="w-full h-full object-cover" />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                                图{index + 1}
-                              </div>
-                            )}
-                          </div>
-                          <a
-                            href={url}
-                            download={`xiaohongshu-image-${index + 1}.png`}
-                            className="block w-full text-center text-xs px-2 py-1 rounded transition-colors"
-                            style={{
-                              background: 'var(--bg-elevated)',
-                              color: 'var(--text-secondary)',
-                            }}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            ⬇️ 下载
-                          </a>
-                        </div>
-                      ))}
+              {/* 公众号 */}
+              {selectedVersion.platform === 'wechat' && (
+                <>
+                  {(selectedVersion.metadata?.cover_url || (selectedVersion.metadata?.image_urls && getImageUrls(selectedVersion)[0])) && (
+                    <div className="mb-6">
+                      <h4 className="text-sm font-medium mb-3" style={{ color: 'var(--text-secondary)' }}>
+                        🖼️ 封面图
+                      </h4>
+                      <div
+                        className="rounded-lg overflow-hidden"
+                        style={{
+                          background: 'var(--bg-primary)',
+                          border: '1px solid var(--border-subtle)',
+                        }}
+                      >
+                        <img
+                          src={selectedVersion.metadata?.cover_url || getImageUrls(selectedVersion)[0]}
+                          alt="封面图"
+                          className="w-full h-48 object-cover"
+                        />
+                      </div>
                     </div>
-                  )
-                })()}
-              </div>
+                  )}
+                  {(selectedVersion.metadata?.titles || selectedVersion.titles) && (
+                    <Section title="📌 标题">
+                      {selectedVersion.metadata?.titles || selectedVersion.titles}
+                    </Section>
+                  )}
+                  {selectedVersion.metadata?.summary && (
+                    <Section title="📝 摘要">{selectedVersion.metadata.summary}</Section>
+                  )}
+                  <Section title="📄 正文">{selectedVersion.content}</Section>
+                  {selectedVersion.metadata?.illustrations && (
+                    <ImageSection
+                      title="🖼️ 配图"
+                      imageUrls={Array.isArray(selectedVersion.metadata.illustrations) ? selectedVersion.metadata.illustrations : []}
+                      onDownload={(url, index) => downloadImage(url, `wechat-image-${index + 1}.png`)}
+                    />
+                  )}
+                </>
+              )}
+
+              {/* 朋友圈 */}
+              {selectedVersion.platform === 'moments' && (
+                <>
+                  <Section title="📝 文案">{selectedVersion.content}</Section>
+                  <ImageSection
+                    title="🖼️ 配图"
+                    imageUrls={getImageUrls(selectedVersion)}
+                    onDownload={(url, index) => downloadImage(url, `moments-image-${index + 1}.png`)}
+                  />
+                </>
+              )}
+
+              {/* 播客 */}
+              {selectedVersion.platform === 'podcast' && (
+                <>
+                  {selectedVersion.metadata?.title && (
+                    <Section title="📌 标题">{selectedVersion.metadata.title}</Section>
+                  )}
+                  {selectedVersion.metadata?.format && (
+                    <Section title="🎙️ 格式">{selectedVersion.metadata.format}</Section>
+                  )}
+                  {selectedVersion.metadata?.duration && (
+                    <Section title="⏱️ 时长">{selectedVersion.metadata.duration}</Section>
+                  )}
+                  {selectedVersion.metadata?.opening && (
+                    <Section title="🎬 开场白">{selectedVersion.metadata.opening}</Section>
+                  )}
+                  {selectedVersion.metadata?.outline && (
+                    <Section title="📋 大纲">{formatOutline(selectedVersion.metadata.outline)}</Section>
+                  )}
+                  <Section title="📝 逐字稿">{selectedVersion.content}</Section>
+                  {selectedVersion.metadata?.closing && (
+                    <Section title="🔚 结语">{selectedVersion.metadata.closing}</Section>
+                  )}
+                </>
+              )}
+
+              {/* 自定义 */}
+              {selectedVersion.platform === 'custom' && (
+                <>
+                  <Section title="📝 文案">{selectedVersion.content}</Section>
+                  <ImageSection
+                    title="🖼️ 配图"
+                    imageUrls={getImageUrls(selectedVersion)}
+                    onDownload={(url, index) => downloadImage(url, `custom-image-${index + 1}.png`)}
+                  />
+                </>
+              )}
 
               {/* Actions */}
               <div className="flex gap-3 pt-6 border-t" style={{ borderColor: 'var(--border-subtle)' }}>

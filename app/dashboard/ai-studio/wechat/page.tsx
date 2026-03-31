@@ -193,9 +193,10 @@ export default function WechatPage() {
     const illustration = illustrations[index]
     if (!illustration || !illustration.prompt) return
     
-    const updated = [...illustrations]
-    updated[index] = { ...illustration, status: 'generating' }
-    setIllustrations(updated)
+    // 立即更新状态为生成中
+    setIllustrations(prev => prev.map((ill, idx) => 
+      idx === index ? { ...ill, status: 'generating' } : ill
+    ))
     
     try {
       const response = await fetch('/api/ai-studio/wechat/generate-illustration', {
@@ -208,28 +209,21 @@ export default function WechatPage() {
       
       if (response.ok) {
         const data = await response.json()
-        updated[index] = { 
-          ...illustration, 
-          imageUrl: data.imageUrl || '', 
-          status: 'success' 
-        }
+        // 生成成功，立即更新状态
+        setIllustrations(prev => prev.map((ill, idx) => 
+          idx === index ? { ...ill, imageUrl: data.imageUrl || '', status: 'success' } : ill
+        ))
       } else {
         const error = await response.json()
-        updated[index] = { 
-          ...illustration, 
-          status: 'error',
-          error: error.error || '生成失败' 
-        }
+        setIllustrations(prev => prev.map((ill, idx) => 
+          idx === index ? { ...ill, status: 'error', error: error.error || '生成失败' } : ill
+        ))
       }
     } catch (error) {
-      updated[index] = { 
-        ...illustration, 
-        status: 'error',
-        error: '生成失败' 
-      }
+      setIllustrations(prev => prev.map((ill, idx) => 
+        idx === index ? { ...ill, status: 'error', error: '生成失败' } : ill
+      ))
     }
-    
-    setIllustrations(updated)
   }
 
   // 重新生成所有配图
@@ -921,42 +915,46 @@ export default function WechatPage() {
                 const paragraphs = generatedCopy.content.split(/\n\n+/)
                 const successfulIllustrations = illustrations.filter(ill => ill.status === 'success')
                 
-                return paragraphs.map((paragraph, idx) => (
-                  <div key={idx} className="mb-4">
-                    <p className="text-sm leading-relaxed">{paragraph}</p>
-                    
-                    {/* 插入配图按钮 - 每个段落后 */}
+                return (
+                  <>
+                    {/* 标题下方只显示一个插入位置 */}
                     {successfulIllustrations.length > 0 && (
-                      <div className="mt-3 p-3 rounded-lg" style={{ background: 'var(--bg-elevated)' }}>
-                        <p className="text-xs mb-2" style={{ color: 'var(--text-secondary)' }}>
-                          在此处插入配图：
+                      <div className="mb-6 p-4 rounded-lg" style={{ background: 'var(--bg-elevated)', border: '1px dashed var(--accent)' }}>
+                        <p className="text-xs mb-3 font-medium" style={{ color: 'var(--accent)' }}>
+                          📍 推荐配图位置（点击插入）：
                         </p>
                         <div className="flex flex-wrap gap-2">
-                          {successfulIllustrations.map((ill, i) => (
+                          {illustrations.map((ill, i) => (
                             <button
                               key={i}
                               onClick={() => {
-                                // 在实际应用中，这里应该更新 generatedCopy.content
-                                // 由于状态管理复杂，这里仅做演示
-                                const newContent = [...paragraphs]
-                                newContent[idx] = paragraph + `\n\n![配图](${ill.imageUrl})`
-                                setGeneratedCopy({ ...generatedCopy, content: newContent.join('\n\n') })
+                                // 在标题后插入配图
+                                const newContent = [paragraphs[0], `![配图 ${i + 1}](${ill.imageUrl || ''})`, ...paragraphs.slice(1)].join('\n\n')
+                                setGeneratedCopy({ ...generatedCopy, content: newContent })
                               }}
-                              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:shadow-md"
+                              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:shadow-md ${
+                                ill.status === 'success' ? '' : 'opacity-50'
+                              }`}
                               style={{
-                                background: '#07C16020',
-                                color: '#07C160',
-                                border: '1px solid #07C16040',
+                                background: ill.status === 'success' ? '#07C16020' : 'var(--bg-primary)',
+                                color: ill.status === 'success' ? '#07C160' : 'var(--text-tertiary)',
+                                border: ill.status === 'success' ? '1px solid #07C16040' : '1px solid var(--border-subtle)',
                               }}
+                              disabled={ill.status !== 'success'}
                             >
-                              🖼️ 插入配图 {i + 1}
+                              {ill.status === 'success' ? `🖼️ 配图 ${i + 1}` : `⏳ 配图 ${i + 1} (生成中)`}
                             </button>
                           ))}
                         </div>
                       </div>
                     )}
-                  </div>
-                ))
+                    
+                    {/* 正文段落 - 不再显示插入按钮 */}
+                    {paragraphs.map((paragraph, idx) => (
+                      <p key={idx} className="text-sm leading-relaxed mb-4">{paragraph}</p>
+                    ))}
+                  </>
+                )
               })()}
             </div>
           </div>

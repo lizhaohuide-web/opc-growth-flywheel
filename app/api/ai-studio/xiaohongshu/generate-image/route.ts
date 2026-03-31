@@ -5,6 +5,15 @@ const DASHSCOPE_BASE_URL = 'https://dashscope.aliyuncs.com/api/v1'
 
 export async function POST(request: NextRequest) {
   try {
+    // 检查 API Key
+    if (!DASHSCOPE_API_KEY) {
+      console.error('❌ DASHSCOPE_API_KEY 未配置')
+      return NextResponse.json(
+        { error: '服务器配置错误：缺少 DASHSCOPE_API_KEY' },
+        { status: 500 }
+      )
+    }
+
     const body = await request.json()
     const { prompt, style, index, ratio = '3:4' } = body
 
@@ -15,7 +24,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log(`🎨 生成第${index + 1}张图片:`, { style, ratio })
+    // 截断提示词到 2000 字符以内
+    const truncatedPrompt = prompt.length > 2000 ? prompt.substring(0, 2000) + '...' : prompt
+    if (prompt.length > 2000) {
+      console.log(`⚠️ 提示词过长 (${prompt.length}字符)，已截断到 2000 字符`)
+    }
+
+    console.log(`🎨 生成第${index + 1}张图片:`, { style, ratio, promptLength: truncatedPrompt.length })
 
     // 根据比例计算实际尺寸
     const sizeMap: Record<string, string> = {
@@ -32,7 +47,7 @@ export async function POST(request: NextRequest) {
     // 添加重试逻辑
     let response
     let retryCount = 0
-    const maxRetries = 3
+    const maxRetries = 5
     
     while (retryCount < maxRetries) {
       response = await fetch(`${DASHSCOPE_BASE_URL}/services/aigc/multimodal-generation/generation`, {
@@ -50,7 +65,7 @@ export async function POST(request: NextRequest) {
                 content: [
                   {
                     type: 'text',
-                    text: prompt,
+                    text: truncatedPrompt,
                   },
                 ],
               },
@@ -66,25 +81,26 @@ export async function POST(request: NextRequest) {
       // 如果是速率限制错误，等待后重试
       if (response.status === 429 && retryCount < maxRetries - 1) {
         retryCount++
-        console.log(`⏳ 速率限制，等待${retryCount * 2}秒后重试...`)
-        await new Promise(resolve => setTimeout(resolve, retryCount * 2000))
+        const waitTime = retryCount * 3000
+        console.log(`⏳ 速率限制 (429)，等待${waitTime/1000}秒后重试... (第${retryCount}/${maxRetries}次)`)
+        await new Promise(resolve => setTimeout(resolve, waitTime))
       } else {
         break
       }
     }
 
-    console.log('API 响应状态:', response.status)
+    console.log('📡 API 响应状态:', response.status)
 
     // 获取原始响应
     const responseText = await response.text()
-    console.log('API 响应:', responseText.substring(0, 500))
+    console.log('📦 API 响应:', responseText.substring(0, 800))
 
     // 尝试解析 JSON
     let data
     try {
       data = JSON.parse(responseText)
     } catch (e) {
-      console.error('解析 JSON 失败:', e)
+      console.error('❌ 解析 JSON 失败:', e)
       return NextResponse.json(
         { error: 'API 返回格式错误', responseText: responseText.substring(0, 500) },
         { status: 500 }
@@ -92,7 +108,12 @@ export async function POST(request: NextRequest) {
     }
 
     if (!response.ok) {
-      console.error('API 错误:', data)
+      console.error('❌ API 错误:', {
+        status: response.status,
+        code: data.code,
+        message: data.message,
+        output: data.output,
+      })
       const errorMessage = data.output?.text || data.message?.message || data.message || '生成图片失败'
       throw new Error(errorMessage)
     }
