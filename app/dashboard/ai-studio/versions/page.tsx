@@ -341,6 +341,11 @@ export default function VersionsPage() {
   }
   
   const handleRefresh = () => {
+    setKeyword('')
+    setDateFrom('')
+    setDateTo('')
+    setPlatform('')
+    setSortBy('time')
     setPage(0)
   }
   
@@ -359,34 +364,75 @@ export default function VersionsPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 animate-enter">
-      {/* Header */}
-      <div className="mb-6">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center text-sm mb-4 transition-colors"
-          style={{ color: 'var(--text-secondary)' }}
-        >
-          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          返回
-        </button>
-        
-        <div className="flex items-center gap-3">
-          <span className="text-4xl">📊</span>
-          <div>
-            <h1 className="text-3xl font-display font-bold" style={{ color: 'var(--text-primary)' }}>
+      {/* Header + 搜索筛选 */}
+      <div className="card p-5 mb-6 sticky top-4 z-10">
+        {/* 标题行 */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => router.back()}
+              className="p-2 rounded-lg transition-colors hover:bg-[var(--bg-elevated)] min-h-[44px] min-w-[44px] flex items-center justify-center"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <h1 className="text-xl font-display font-bold" style={{ color: 'var(--text-primary)' }}>
               生成历史
             </h1>
-            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              查看所有 AI 生成的内容版本
-            </p>
+            <span className="text-xs px-2 py-1 rounded-full" style={{ background: 'var(--accent-subtle)', color: 'var(--accent)' }}>
+              {total} 条
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            {/* 视图切换 */}
+            <div className="flex items-center rounded-lg p-0.5" style={{ background: 'var(--bg-elevated)' }}>
+              <button
+                onClick={() => setViewMode('list')}
+                className="p-2 rounded-md transition-all min-h-[36px] min-w-[36px] flex items-center justify-center"
+                style={viewMode === 'list'
+                  ? { background: 'var(--bg-card)', color: 'var(--accent)' }
+                  : { color: 'var(--text-tertiary)' }
+                }
+                title="列表视图"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <button
+                onClick={() => setViewMode('grid')}
+                className="p-2 rounded-md transition-all min-h-[36px] min-w-[36px] flex items-center justify-center"
+                style={viewMode === 'grid'
+                  ? { background: 'var(--bg-card)', color: 'var(--accent)' }
+                  : { color: 'var(--text-tertiary)' }
+                }
+                title="网格视图"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                </svg>
+              </button>
+            </div>
+            <button
+              onClick={() => {
+                setKeyword('')
+                setDateFrom('')
+                setDateTo('')
+                setPlatform('')
+                setSortBy('time')
+                setPage(0)
+              }}
+              className="px-3 py-2 rounded-lg text-xs font-medium transition-all min-h-[36px]"
+              style={{ background: 'var(--accent)', color: 'var(--bg-primary)' }}
+            >
+              刷新
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* 搜索筛选栏 */}
-      <div className="card p-4 mb-6 sticky top-4 z-10">
+        {/* 搜索框 */}
         <div className="relative mb-3">
           <span className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-tertiary)' }}>🔍</span>
           <input
@@ -397,7 +443,7 @@ export default function VersionsPage() {
               setPage(0)
             }}
             placeholder="搜索生成内容..."
-            className="w-full pl-10 pr-4 py-3 rounded-xl text-sm focus:outline-none transition-all min-h-[44px]"
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm focus:outline-none transition-all min-h-[44px]"
             style={{
               background: 'var(--bg-elevated)',
               border: '1px solid var(--border-subtle)',
@@ -407,13 +453,14 @@ export default function VersionsPage() {
             onBlur={e => (e.target as HTMLElement).style.borderColor = 'var(--border-subtle)'}
           />
         </div>
-        
+
+        {/* 筛选行 */}
         <div className="flex flex-wrap items-center gap-2">
           <input
             type="date"
             value={dateFrom}
             onChange={(e) => { setDateFrom(e.target.value); setPage(0) }}
-            className="px-3 py-2 rounded-lg text-xs focus:outline-none min-h-[44px]"
+            className="px-3 py-2 rounded-lg text-xs focus:outline-none min-h-[36px]"
             style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}
           />
           <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>~</span>
@@ -421,75 +468,47 @@ export default function VersionsPage() {
             type="date"
             value={dateTo}
             onChange={(e) => { setDateTo(e.target.value); setPage(0) }}
-            className="px-3 py-2 rounded-lg text-xs focus:outline-none min-h-[44px]"
+            className="px-3 py-2 rounded-lg text-xs focus:outline-none min-h-[36px]"
             style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}
           />
           <select
             value={platform}
             onChange={(e) => { setPlatform(e.target.value); setPage(0) }}
-            className="px-3 py-2 rounded-lg text-xs focus:outline-none appearance-none min-h-[44px]"
+            className="px-3 py-2 rounded-lg text-xs focus:outline-none appearance-none min-h-[36px]"
             style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}
           >
             <option value="">全部平台</option>
-            <option value="short-video">短视频</option>
-            <option value="xiaohongshu">小红书</option>
-            <option value="wechat">公众号</option>
-            <option value="moments">朋友圈</option>
-            <option value="podcast">播客</option>
-            <option value="custom">自定义</option>
+            <option value="short-video">🎬 短视频</option>
+            <option value="xiaohongshu">📕 小红书</option>
+            <option value="wechat">📝 公众号</option>
+            <option value="moments">💬 朋友圈</option>
+            <option value="podcast">🎙️ 播客</option>
+            <option value="custom">✨ 自定义</option>
           </select>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'time' | 'version')}
-            className="px-3 py-2 rounded-lg text-xs focus:outline-none min-h-[44px]"
+            className="px-3 py-2 rounded-lg text-xs focus:outline-none min-h-[36px]"
             style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}
           >
             <option value="time">按时间</option>
             <option value="version">按版本号</option>
           </select>
-          
-          <div className="ml-auto flex items-center gap-2">
-            <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{total} 条</span>
+          {(keyword || dateFrom || dateTo || platform) && (
             <button
-              onClick={handleRefresh}
-              className="px-3 py-2 rounded-lg text-xs font-medium transition-all min-h-[44px]"
-              style={{ background: 'var(--accent-subtle)', color: 'var(--accent)' }}
+              onClick={() => {
+                setKeyword('')
+                setDateFrom('')
+                setDateTo('')
+                setPlatform('')
+                setPage(0)
+              }}
+              className="px-2 py-1 rounded text-xs transition-colors"
+              style={{ color: 'var(--text-tertiary)' }}
             >
-              刷新
+              ✕ 清除筛选
             </button>
-          </div>
-        </div>
-      </div>
-      
-      {/* 视图切换 */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center rounded-lg p-0.5" style={{ background: 'var(--bg-elevated)' }}>
-          <button
-            onClick={() => setViewMode('list')}
-            className="p-2 rounded-md transition-all min-h-[44px] min-w-[44px] flex items-center justify-center"
-            style={viewMode === 'list'
-              ? { background: 'var(--bg-card)', color: 'var(--accent)' }
-              : { color: 'var(--text-tertiary)' }
-            }
-            title="列表视图"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <button
-            onClick={() => setViewMode('grid')}
-            className="p-2 rounded-md transition-all min-h-[44px] min-w-[44px] flex items-center justify-center"
-            style={viewMode === 'grid'
-              ? { background: 'var(--bg-card)', color: 'var(--accent)' }
-              : { color: 'var(--text-tertiary)' }
-            }
-            title="网格视图"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
-            </svg>
-          </button>
+          )}
         </div>
       </div>
 
