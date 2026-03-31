@@ -38,6 +38,7 @@ export default function DashboardLayout({ children }: Props) {
     { href: '/dashboard', label: '仪表盘', icon: '◆' },
     { href: '/dashboard/notes', label: '笔记', icon: '▦' },
     { href: '/dashboard/notes/new', label: '创作', icon: '✦' },
+    { href: '/dashboard/ai-studio', label: 'AI 工作室', icon: '◈' },
     { href: '/dashboard/reports/growth', label: '成长', icon: '↗' },
     { 
       href: '/dashboard/subscription', 

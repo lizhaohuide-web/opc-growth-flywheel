@@ -40,6 +40,13 @@ export default async function NotePage({ params }: { params: { id: string } }) {
         
         <div className="flex items-center gap-2">
           <Link
+            href={`/dashboard/ai-studio/${note.id}`}
+            className="px-4 py-2 text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+            style={{ background: 'var(--accent)', color: 'var(--bg-primary)' }}
+          >
+            <span>◈</span> <span className="hidden sm:inline">AI 改写</span>
+          </Link>
+          <Link
             href={`/dashboard/notes/${note.id}/edit`}
             className="px-4 py-2 text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
             style={{ background: 'var(--bg-elevated)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)' }}
