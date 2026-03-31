@@ -38,14 +38,14 @@ interface PlatformCard {
 
 const platforms: PlatformCard[] = [
   {
-    id: 'wechat',
-    name: '公众号',
-    displayName: '微信公众号',
-    icon: '📝',
-    color: '#07c160',
-    gradient: 'linear-gradient(135deg, #07c160 0%, #06ad56 100%)',
-    features: ['标题优化', '正文改写', '配图生成'],
-    description: '专业深度文章，打造个人品牌',
+    id: 'short-video',
+    name: '短视频',
+    displayName: '抖音/视频号',
+    icon: '🎬',
+    color: '#fe2c55',
+    gradient: 'linear-gradient(135deg, #fe2c55 0%, #ff6b8b 100%)',
+    features: ['脚本创作', '分镜设计', '口播文案'],
+    description: '短视频脚本，抓住黄金 3 秒',
   },
   {
     id: 'xiaohongshu',
@@ -54,18 +54,18 @@ const platforms: PlatformCard[] = [
     icon: '📕',
     color: '#ff2442',
     gradient: 'linear-gradient(135deg, #ff2442 0%, #ff6b7a 100%)',
-    features: ['爆款标题', '文案改写', '标签推荐'],
+    features: ['爆款标题', '文案改写', '配图生成'],
     description: '精致生活方式，种草好物分享',
   },
   {
-    id: 'custom',
-    name: '自定义创作',
-    displayName: '自定义创作',
-    icon: '✨',
-    color: '#f59e0b',
-    gradient: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
-    features: ['自由提示词', '文案改写', '图片生成'],
-    description: '自由输入提示词，改写笔记或生成图片',
+    id: 'wechat',
+    name: '公众号',
+    displayName: '微信公众号',
+    icon: '📝',
+    color: '#07c160',
+    gradient: 'linear-gradient(135deg, #07c160 0%, #06ad56 100%)',
+    features: ['标题优化', '正文改写', '配图生成'],
+    description: '专业深度文章，打造个人品牌',
   },
   {
     id: 'moments',
@@ -78,16 +78,6 @@ const platforms: PlatformCard[] = [
     description: '记录生活点滴，分享成长感悟',
   },
   {
-    id: 'short-video',
-    name: '短视频',
-    displayName: '抖音/视频号',
-    icon: '🎬',
-    color: '#fe2c55',
-    gradient: 'linear-gradient(135deg, #fe2c55 0%, #ff6b8b 100%)',
-    features: ['脚本创作', '分镜设计', '口播文案'],
-    description: '短视频脚本，抓住黄金 3 秒',
-  },
-  {
     id: 'podcast',
     name: '播客',
     displayName: '播客/音频',
@@ -96,6 +86,16 @@ const platforms: PlatformCard[] = [
     gradient: 'linear-gradient(135deg, #9333ea 0%, #a855f7 100%)',
     features: ['对话脚本', '音频生成', '节目策划'],
     description: '双人对话播客，深度内容输出',
+  },
+  {
+    id: 'custom',
+    name: '自定义创作',
+    displayName: '自定义创作',
+    icon: '✨',
+    color: '#c9a96e',
+    gradient: 'linear-gradient(135deg, #c9a96e 0%, #dfc08a 100%)',
+    features: ['自由提示词', '文案改写', '图片生成'],
+    description: '自由输入提示词，改写笔记或生成图片',
   },
 ]
 
@@ -148,12 +148,12 @@ export default function AIStudioPage() {
   }
 
   const platformIcons: Record<string, string> = {
-    wechat: '📝',
-    xiaohongshu: '📕',
-    custom: '✨',
-    moments: '💬',
     'short-video': '🎬',
+    xiaohongshu: '📕',
+    wechat: '📝',
+    moments: '💬',
     podcast: '🎙️',
+    custom: '✨',
   }
 
   return (
@@ -169,54 +169,60 @@ export default function AIStudioPage() {
       </div>
 
       {/* Platform Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {platforms.map(platform => (
           <Link
             key={platform.id}
             href={`/dashboard/ai-studio/${platform.id}`}
-            className="card overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1"
+            className="group relative overflow-hidden rounded-xl transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             style={{
-              background: 'var(--bg-secondary)',
+              background: 'var(--bg-card)',
               border: '1px solid var(--border-subtle)',
             }}
           >
-            {/* Card Header with Gradient */}
+            {/* 顶部色条 */}
             <div
-              className="p-6"
-              style={{
-                background: platform.gradient,
-              }}
-            >
+              className="h-1"
+              style={{ background: platform.gradient }}
+            />
+
+            <div className="p-5">
+              {/* 平台信息 */}
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-4xl">{platform.icon}</span>
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center text-xl"
+                  style={{
+                    background: `${platform.color}15`,
+                    border: `1px solid ${platform.color}30`,
+                  }}
+                >
+                  {platform.icon}
+                </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">{platform.name}</h3>
-                  <p className="text-white/80 text-sm">{platform.displayName}</p>
+                  <h3 className="font-bold text-base" style={{ color: 'var(--text-primary)' }}>
+                    {platform.name}
+                  </h3>
+                  <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                    {platform.displayName}
+                  </p>
                 </div>
               </div>
-              <p className="text-white/90 text-sm">{platform.description}</p>
-            </div>
 
-            {/* Card Body */}
-            <div className="p-6">
-              <div className="flex flex-wrap gap-2 mb-4">
+              {/* 描述 */}
+              <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+                {platform.description}
+              </p>
+
+              {/* 功能标签 */}
+              <div className="flex flex-wrap gap-1.5 mb-4">
                 {platform.features.map(feature => (
                   <span
                     key={feature}
-                    className="text-xs px-2 py-1 rounded-full"
+                    className="text-xs px-2.5 py-1 rounded-md"
                     style={{
-                      background: platform.id === 'wechat' ? 'rgba(7, 193, 96, 0.1)' :
-                                platform.id === 'xiaohongshu' ? 'rgba(255, 36, 66, 0.1)' :
-                                platform.id === 'custom' ? 'rgba(245, 158, 11, 0.1)' :
-                                platform.id === 'moments' ? 'rgba(26, 173, 25, 0.1)' :
-                                platform.id === 'short-video' ? 'rgba(254, 44, 85, 0.1)' :
-                                'rgba(147, 51, 234, 0.1)',
-                      color: platform.id === 'wechat' ? '#07c160' :
-                             platform.id === 'xiaohongshu' ? '#ff2442' :
-                             platform.id === 'custom' ? '#f59e0b' :
-                             platform.id === 'moments' ? '#1aad19' :
-                             platform.id === 'short-video' ? '#fe2c55' :
-                             '#9333ea',
+                      background: `${platform.color}12`,
+                      color: platform.color,
+                      border: `1px solid ${platform.color}25`,
                     }}
                   >
                     {feature}
@@ -224,12 +230,13 @@ export default function AIStudioPage() {
                 ))}
               </div>
 
+              {/* 开始创作 */}
               <div
-                className="flex items-center text-sm font-medium"
+                className="flex items-center text-sm font-medium transition-all group-hover:gap-2"
                 style={{ color: 'var(--accent)' }}
               >
                 开始创作
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
