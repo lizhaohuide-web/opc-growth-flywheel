@@ -163,7 +163,14 @@ ${noteContent.substring(0, 3000)}`
     // 解析 JSON 结果
     let parsedResult
     try {
-      const jsonMatch = result.match(/\{([\s\S]*?)\}/)
+      // 清理可能的 Markdown 代码块标记
+      const cleanResult = result
+        .replace(/```json\s*/g, '')
+        .replace(/```\s*/g, '')
+        .trim()
+      
+      // 尝试提取 JSON 对象
+      const jsonMatch = cleanResult.match(/\{[\s\S]*\}/)
       if (jsonMatch) {
         parsedResult = JSON.parse(jsonMatch[0])
       } else {
@@ -171,11 +178,17 @@ ${noteContent.substring(0, 3000)}`
       }
     } catch (e) {
       console.error('解析 JSON 失败:', e)
-      // 降级处理：尝试直接返回
+      // 降级处理：将原始内容作为正文，不显示 JSON 标记
+      const cleanContent = result
+        .replace(/^\{[\s\S]*\}$/, '') // 移除完整的 JSON 对象
+        .replace(/["\[\]{}]/g, '') // 移除 JSON 符号
+        .replace(/(titles|summary|content|tags):/g, '') // 移除字段名
+        .trim()
+      
       parsedResult = {
         titles: [noteTitle || 'AI 生成的标题'],
-        summary: result.substring(0, 200),
-        content: result,
+        summary: cleanContent.substring(0, 200) || '请手动编辑摘要',
+        content: cleanContent || result,
         tags: ['公众号', 'AI 生成'],
       }
     }

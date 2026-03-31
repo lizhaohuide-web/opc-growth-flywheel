@@ -1191,6 +1191,27 @@ export default function XiaohongshuPage() {
           </div>
         </div>
       )}
+
+      {/* Loading State - 统一加载动画 */}
+      {generating && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div
+            className="card p-8 text-center"
+            style={{
+              background: 'var(--bg-secondary)',
+              maxWidth: '400px',
+            }}
+          >
+            <div className="w-12 h-12 border-4 rounded-full border-t-transparent animate-spin mx-auto mb-4" style={{ borderColor: '#ff2442', borderTopColor: 'transparent' }}></div>
+            <h3 className="text-lg font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
+              正在生成...
+            </h3>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              AI 正在为你生成小红书文案
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

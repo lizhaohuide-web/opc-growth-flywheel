@@ -81,15 +81,35 @@ ${note.content?.substring(0, 3000) || ''}
     let parsed
     try {
       // 清理可能的 Markdown 代码块标记
-      const cleanContent = generatedContent.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim()
-      parsed = JSON.parse(cleanContent)
+      const cleanContent = generatedContent
+        .replace(/```json\s*/g, '')
+        .replace(/```\s*/g, '')
+        .trim()
+      
+      // 提取 JSON 对象
+      const jsonMatch = cleanContent.match(/\{[\s\S]*\}/)
+      if (jsonMatch) {
+        parsed = JSON.parse(jsonMatch[0])
+      } else {
+        throw new Error('未找到 JSON 格式')
+      }
     } catch (e) {
-      // 如果解析失败，返回原始内容
+      console.error('解析 JSON 失败:', e)
+      // 如果解析失败，清理 JSON 标记后返回
+      const cleanScript = generatedContent
+        .replace(/^\{[\s\S]*\}$/, '') // 移除完整的 JSON 对象
+        .replace(/["\[\]{}]/g, '') // 移除 JSON 符号
+        .replace(/(title|script|scenes|subtitles|tags|bgm|coverSuggestion):/g, '') // 移除字段名
+        .split('\n')
+        .filter(line => line.trim())
+        .join('\n')
+        .trim()
+      
       parsed = {
         title: 'AI 生成的标题',
-        script: generatedContent,
+        script: cleanScript || '请手动编辑脚本内容',
         scenes: [],
-        subtitles: generatedContent.substring(0, 200),
+        subtitles: cleanScript.substring(0, 200) || '请手动编辑字幕',
         tags: ['#短视频', '#知识分享'],
         bgm: '轻快背景音乐',
         coverSuggestion: '标题大字 + 人物表情',

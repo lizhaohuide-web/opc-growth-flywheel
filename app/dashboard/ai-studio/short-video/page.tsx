@@ -62,7 +62,16 @@ export default function ShortVideoPage() {
       
       if (response.ok) {
         const data = await response.json()
-        setGeneratedContent(data)
+        // API 返回 { success: true, title, script, ... }，需要提取内容字段
+        setGeneratedContent({
+          title: data.title || 'AI 生成的标题',
+          script: data.script || '请手动编辑脚本内容',
+          scenes: data.scenes || [],
+          subtitles: data.subtitles || '',
+          tags: data.tags || [],
+          bgm: data.bgm || '',
+          coverSuggestion: data.coverSuggestion || '',
+        })
         setStep(2)
       } else {
         const error = await response.json()

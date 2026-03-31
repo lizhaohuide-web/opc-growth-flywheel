@@ -58,6 +58,16 @@ const platforms: PlatformCard[] = [
     description: '精致生活方式，种草好物分享',
   },
   {
+    id: 'custom',
+    name: '自定义创作',
+    displayName: '自定义创作',
+    icon: '✨',
+    color: '#f59e0b',
+    gradient: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
+    features: ['自由提示词', '文案改写', '图片生成'],
+    description: '自由输入提示词，改写笔记或生成图片',
+  },
+  {
     id: 'moments',
     name: '朋友圈',
     displayName: '微信朋友圈',
@@ -140,6 +150,7 @@ export default function AIStudioPage() {
   const platformIcons: Record<string, string> = {
     wechat: '📝',
     xiaohongshu: '📕',
+    custom: '✨',
     moments: '💬',
     'short-video': '🎬',
     podcast: '🎙️',
@@ -196,11 +207,13 @@ export default function AIStudioPage() {
                     style={{
                       background: platform.id === 'wechat' ? 'rgba(7, 193, 96, 0.1)' :
                                 platform.id === 'xiaohongshu' ? 'rgba(255, 36, 66, 0.1)' :
+                                platform.id === 'custom' ? 'rgba(245, 158, 11, 0.1)' :
                                 platform.id === 'moments' ? 'rgba(26, 173, 25, 0.1)' :
                                 platform.id === 'short-video' ? 'rgba(254, 44, 85, 0.1)' :
                                 'rgba(147, 51, 234, 0.1)',
                       color: platform.id === 'wechat' ? '#07c160' :
                              platform.id === 'xiaohongshu' ? '#ff2442' :
+                             platform.id === 'custom' ? '#f59e0b' :
                              platform.id === 'moments' ? '#1aad19' :
                              platform.id === 'short-video' ? '#fe2c55' :
                              '#9333ea',

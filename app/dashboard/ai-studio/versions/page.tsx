@@ -13,8 +13,14 @@ interface AIVersion {
   content: string
   style?: string
   titles?: string
-  image_urls?: string  // JSON string
-  image_prompts?: string  // JSON string
+  image_urls?: string  // JSON string (legacy)
+  image_prompts?: string  // JSON string (legacy)
+  metadata?: {
+    image_urls?: string[] | string
+    image_prompts?: string[] | string
+    titles?: string
+    [key: string]: unknown
+  }
   created_at: string
 }
 
@@ -335,11 +341,11 @@ export default function VersionsPage() {
               {(() => {
                 let title = ''
                 if (selectedVersion.metadata?.titles) {
-                  title = selectedVersion.metadata.titles
+                  title = typeof selectedVersion.metadata.titles === 'string' 
+                    ? selectedVersion.metadata.titles 
+                    : ''
                 } else if (selectedVersion.titles) {
                   title = selectedVersion.titles
-                } else if (selectedVersion.title) {
-                  title = selectedVersion.title
                 }
                 
                 if (!title) return null
