@@ -51,7 +51,7 @@ ${noteContent}
 
 请直接返回 JSON 数组，不要有其他文字。`
 
-    let response
+    let response: Response | undefined
     let retryCount = 0
     const maxRetries = 3
 

@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     const platform = searchParams.get('platform')
 
     // TODO: Fetch feedback loops from database
-    const feedbackLoops = [] // Placeholder
+    const feedbackLoops: any[] = [] // Placeholder
 
     return NextResponse.json({
       success: true,
@@ -55,11 +55,11 @@ function analyzePerformance(platform: string, metrics: any) {
   const { views = 0, likes = 0, comments = 0, shares = 0, conversion = 0 } = metrics
 
   // Calculate engagement rates
-  const likeRate = views > 0 ? (likes / views * 100).toFixed(2) : 0
-  const commentRate = views > 0 ? (comments / views * 100).toFixed(2) : 0
-  const shareRate = views > 0 ? (shares / views * 100).toFixed(2) : 0
+  const likeRate = views > 0 ? (likes / views * 100).toFixed(2) : "0"
+  const commentRate = views > 0 ? (comments / views * 100).toFixed(2) : "0"
+  const shareRate = views > 0 ? (shares / views * 100).toFixed(2) : "0"
   const totalEngagement = likes + comments + shares
-  const engagementRate = views > 0 ? (totalEngagement / views * 100).toFixed(2) : 0
+  const engagementRate = views > 0 ? (totalEngagement / views * 100).toFixed(2) : "0"
 
   // Generate insights based on platform benchmarks
   const insights = generateInsights(platform, {

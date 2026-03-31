@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     
     // 调用通义千问图像生成 API (qwen-image-2.0-pro)
     // 添加重试逻辑
-    let response
+    let response: Response | undefined
     let retryCount = 0
     const maxRetries = 3
     
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       response = res
       
       // 如果是速率限制错误，等待后重试
-      if (response.status === 429 && retryCount < maxRetries - 1) {
+      if (response!.status === 429 && retryCount < maxRetries - 1) {
         retryCount++
         console.log(`⏳ 速率限制，等待${retryCount * 2}秒后重试...`)
         await new Promise(resolve => setTimeout(resolve, retryCount * 2000))

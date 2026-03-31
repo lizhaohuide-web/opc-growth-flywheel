@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     
     // 调用通义千问图像生成 API (qwen-image-2.0-pro)
     // 添加重试逻辑
-    let response
+    let response: Response | undefined
     let retryCount = 0
     const maxRetries = 5
     
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       })
       
       // 如果是速率限制错误，等待后重试
-      if (response.status === 429 && retryCount < maxRetries - 1) {
+      if (response!.status === 429 && retryCount < maxRetries - 1) {
         retryCount++
         const waitTime = retryCount * 3000
         console.log(`⏳ 速率限制 (429)，等待${waitTime/1000}秒后重试... (第${retryCount}/${maxRetries}次)`)
@@ -89,10 +89,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log('📡 API 响应状态:', response.status)
+    console.log('📡 API 响应状态:', response!.status)
 
     // 获取原始响应
-    const responseText = await response.text()
+    const responseText = await response!.text()
     console.log('📦 API 响应:', responseText.substring(0, 800))
 
     // 尝试解析 JSON
@@ -107,9 +107,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!response.ok) {
+    if (!response!.ok) {
       console.error('❌ API 错误:', {
-        status: response.status,
+        status: response!.status,
         code: data.code,
         message: data.message,
         output: data.output,

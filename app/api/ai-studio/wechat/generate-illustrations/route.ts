@@ -88,11 +88,11 @@ export async function POST(request: NextRequest) {
 /**
  * 生成单张配图（调用通义万相）
  */
-export async function generateSingleIllustration(prompt: string) {
+async function generateSingleIllustration(prompt: string) {
   try {
     console.log('🎨 调用通义万相生成图片:', prompt.substring(0, 50) + '...')
 
-    let response
+    let response: Response | undefined
     let retryCount = 0
     const maxRetries = 3
     
@@ -125,7 +125,7 @@ export async function generateSingleIllustration(prompt: string) {
         }),
       })
       
-      if (response.status === 429 && retryCount < maxRetries - 1) {
+      if (response!.status === 429 && retryCount < maxRetries - 1) {
         retryCount++
         console.log(`⏳ 速率限制，等待${retryCount * 2}秒后重试...`)
         await new Promise(resolve => setTimeout(resolve, retryCount * 2000))
@@ -134,7 +134,7 @@ export async function generateSingleIllustration(prompt: string) {
       }
     }
 
-    const responseText = await response.text()
+    const responseText = await response!.text()
     let data
     try {
       data = JSON.parse(responseText)
@@ -142,7 +142,7 @@ export async function generateSingleIllustration(prompt: string) {
       throw new Error('API 返回格式错误')
     }
 
-    if (!response.ok) {
+    if (!response!.ok) {
       const errorMessage = data.output?.text || data.message?.message || data.message || '生成失败'
       throw new Error(errorMessage)
     }

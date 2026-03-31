@@ -49,7 +49,7 @@ ${getStyleDescription(style || 'professional')}
 - 文字与背景对比明显`
 
     // 调用通义万相 API
-    let response
+    let response: Response | undefined
     let retryCount = 0
     const maxRetries = 3
     
@@ -83,7 +83,7 @@ ${getStyleDescription(style || 'professional')}
       })
       
       // 如果是速率限制错误，等待后重试
-      if (response.status === 429 && retryCount < maxRetries - 1) {
+      if (response!.status === 429 && retryCount < maxRetries - 1) {
         retryCount++
         console.log(`⏳ 速率限制，等待${retryCount * 2}秒后重试...`)
         await new Promise(resolve => setTimeout(resolve, retryCount * 2000))
@@ -92,9 +92,9 @@ ${getStyleDescription(style || 'professional')}
       }
     }
 
-    console.log('API 响应状态:', response.status)
+    console.log('API 响应状态:', response!.status)
 
-    const responseText = await response.text()
+    const responseText = await response!.text()
     console.log('API 响应:', responseText.substring(0, 500))
 
     let data
@@ -108,7 +108,7 @@ ${getStyleDescription(style || 'professional')}
       )
     }
 
-    if (!response.ok) {
+    if (!response!.ok) {
       console.error('API 错误:', data)
       const errorMessage = data.output?.text || data.message?.message || data.message || '生成封面图失败'
       throw new Error(errorMessage)

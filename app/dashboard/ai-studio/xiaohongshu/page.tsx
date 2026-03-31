@@ -184,7 +184,7 @@ export default function XiaohongshuPage() {
           content = lines.slice(1).join('\n').trim()
         }
         // 规则 3: 第一行较短且包含 emoji（小红书标题特点）
-        else if (lines[0] && lines[0].length < 50 && lines[0].match(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}]/u)) {
+        else if (lines[0] && lines[0].length < 50 && /[\u2600-\u27BF\uD83C-\uDBFF\uDC00-\uDFFF]/.test(lines[0])) {
           title = lines[0].trim()
           content = lines.slice(1).join('\n').trim()
         }
@@ -911,7 +911,7 @@ export default function XiaohongshuPage() {
               </div>
             </div>
             <div className="space-y-4">
-              {imagePrompts.map((prompt, index) => (
+              {(imagePrompts as string[]).map((prompt: string, index: number) => (
                 <div key={index}>
                   <div className="flex items-center justify-between mb-1">
                     <label className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
@@ -1031,7 +1031,7 @@ export default function XiaohongshuPage() {
             
             {/* 图片预览 */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4 mb-6">
-              {generatedImages.map((img, index) => (
+              {generatedImages.map((img: string | null, index: number) => (
                 <div key={index} className="space-y-2">
                   <div
                     className="aspect-square rounded-lg overflow-hidden"
@@ -1146,7 +1146,7 @@ export default function XiaohongshuPage() {
             
             {/* 图片缩略图 */}
             <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
-              {generatedImages.map((img, index) => (
+              {generatedImages.map((img: string | null, index: number) => (
                 <div
                   key={index}
                   className="aspect-square rounded overflow-hidden"
