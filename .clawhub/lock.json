@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "skills": {
+    "podcast": {
+      "version": "1.0.1",
+      "installedAt": 1774972210052
+    },
+    "xiaohongshu-cn": {
+      "version": "1.0.0",
+      "installedAt": 1774972263513
+    }
+  }
+}

@@ -49,73 +49,73 @@ export default async function DashboardPage() {
       </div>
       
       {/* 统计卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="card p-4 md:p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>总笔记数</p>
-              <p className="text-4xl font-body mt-2" style={{ color: 'var(--accent)' }}>{stats.totalNotes}</p>
+              <p className="text-3xl md:text-4xl font-body mt-2" style={{ color: 'var(--accent)' }}>{stats.totalNotes}</p>
             </div>
-            <div className="text-4xl">📊</div>
+            <div className="text-3xl md:text-4xl">📊</div>
           </div>
         </div>
         
-        <div className="card p-6">
+        <div className="card p-4 md:p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>今日笔记</p>
-              <p className="text-4xl font-body mt-2" style={{ color: 'var(--success)' }}>{stats.todayNotes}</p>
+              <p className="text-3xl md:text-4xl font-body mt-2" style={{ color: 'var(--success)' }}>{stats.todayNotes}</p>
             </div>
-            <div className="text-4xl">✅</div>
+            <div className="text-3xl md:text-4xl">✅</div>
           </div>
         </div>
         
-        <div className="card p-6">
+        <div className="card p-4 md:p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>总字数</p>
-              <p className="text-4xl font-body mt-2" style={{ color: 'var(--accent-light)' }}>{stats.totalWords.toLocaleString()}</p>
+              <p className="text-3xl md:text-4xl font-body mt-2" style={{ color: 'var(--accent-light)' }}>{stats.totalWords.toLocaleString()}</p>
             </div>
-            <div className="text-4xl">✍️</div>
+            <div className="text-3xl md:text-4xl">✍️</div>
           </div>
         </div>
       </div>
       
       {/* 快速入口 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
         <Link href="/dashboard/notes/new"
-          className="rounded-xl p-6 text-white hover:opacity-90 transition-opacity"
+          className="rounded-xl p-4 md:p-6 text-white hover:opacity-90 transition-opacity min-h-[100px]"
           style={{ background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-xl font-bold">📝 新建笔记</h3>
-              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.8)' }}>记录今天的学习和成长</p>
+              <h3 className="text-lg md:text-xl font-bold">📝 新建笔记</h3>
+              <p className="mt-1 md:mt-2 text-xs md:text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>记录今天的学习和成长</p>
             </div>
-            <div className="text-5xl">✏️</div>
+            <div className="text-4xl md:text-5xl">✏️</div>
           </div>
         </Link>
         
         <Link href="/dashboard/ai-studio"
-          className="rounded-xl p-6 text-white hover:opacity-90 transition-opacity"
+          className="rounded-xl p-4 md:p-6 text-white hover:opacity-90 transition-opacity min-h-[100px]"
           style={{ background: 'linear-gradient(135deg, #ff2442 0%, #ff6b7a 100%)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-xl font-bold">🎨 AI 工作室</h3>
-              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.8)' }}>一键改写为小红书/公众号</p>
+              <h3 className="text-lg md:text-xl font-bold">🎨 AI 工作室</h3>
+              <p className="mt-1 md:mt-2 text-xs md:text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>一键改写为小红书/公众号</p>
             </div>
-            <div className="text-5xl">◈</div>
+            <div className="text-4xl md:text-5xl">◈</div>
           </div>
         </Link>
         
         <Link href="/dashboard/notes/new?template=guided"
-          className="rounded-xl p-6 text-white hover:opacity-90 transition-opacity"
+          className="rounded-xl p-4 md:p-6 text-white hover:opacity-90 transition-opacity min-h-[100px]"
           style={{ background: 'linear-gradient(135deg, #6b46c1 0%, #9333ea 100%)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-xl font-bold">🎯 引导式模板</h3>
-              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.8)' }}>使用 KPT、CORNELL 等模板</p>
+              <h3 className="text-lg md:text-xl font-bold">🎯 引导式模板</h3>
+              <p className="mt-1 md:mt-2 text-xs md:text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>使用 KPT、CORNELL 等模板</p>
             </div>
-            <div className="text-5xl">📋</div>
+            <div className="text-4xl md:text-5xl">📋</div>
           </div>
         </Link>
       </div>
@@ -189,41 +189,41 @@ export default async function DashboardPage() {
       </div>
       
       {/* AI 功能入口 */}
-      <div className="rounded-xl p-6" style={{ background: 'var(--accent-subtle)', border: '1px solid var(--border-accent)' }}>
-        <h2 className="text-xl font-display mb-4" style={{ color: 'var(--text-primary)' }}>🤖 AI 助手</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="rounded-xl p-4 md:p-6" style={{ background: 'var(--accent-subtle)', border: '1px solid var(--border-accent)' }}>
+        <h2 className="text-lg md:text-xl font-display mb-4" style={{ color: 'var(--text-primary)' }}>🤖 AI 助手</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
           <Link
             href="/dashboard/ai-studio/xiaohongshu"
-            className="card p-4 hover:opacity-90 transition-opacity"
+            className="card p-4 min-h-[80px] hover:opacity-90 transition-opacity"
           >
             <div className="flex items-center gap-3">
-              <div className="text-3xl">📕</div>
-              <div>
-                <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>小红书改写</h3>
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>生成文案 + 配图一键搞定</p>
+              <div className="text-3xl flex-shrink-0">📕</div>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-sm md:text-base" style={{ color: 'var(--text-primary)' }}>小红书改写</h3>
+                <p className="text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>生成文案 + 配图一键搞定</p>
               </div>
             </div>
           </Link>
           
           <Link
             href="/dashboard/ai-studio/wechat"
-            className="card p-4 hover:opacity-90 transition-opacity"
+            className="card p-4 min-h-[80px] hover:opacity-90 transition-opacity"
           >
             <div className="flex items-center gap-3">
-              <div className="text-3xl">📱</div>
-              <div>
-                <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>公众号改写</h3>
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI 改写为公众号文章</p>
+              <div className="text-3xl flex-shrink-0">📱</div>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-sm md:text-base" style={{ color: 'var(--text-primary)' }}>公众号改写</h3>
+                <p className="text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>AI 改写为公众号文章</p>
               </div>
             </div>
           </Link>
           
-          <Link href="/dashboard/reports/weekly" className="card p-4 hover:opacity-90 transition-opacity">
+          <Link href="/dashboard/reports/weekly" className="card p-4 min-h-[80px] hover:opacity-90 transition-opacity">
             <div className="flex items-center gap-3">
-              <div className="text-3xl">📊</div>
-              <div>
-                <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>周报生成</h3>
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI 生成每周总结</p>
+              <div className="text-3xl flex-shrink-0">📊</div>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-sm md:text-base" style={{ color: 'var(--text-primary)' }}>周报生成</h3>
+                <p className="text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>AI 生成每周总结</p>
               </div>
             </div>
           </Link>

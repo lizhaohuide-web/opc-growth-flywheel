@@ -145,7 +145,7 @@ export default function NotesPage() {
               setPage(0)
             }}
             placeholder="搜索笔记标题或内容..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm focus:outline-none transition-all"
+            className="w-full pl-10 pr-4 py-3 rounded-xl text-sm focus:outline-none transition-all min-h-[44px]"
             style={{
               background: 'var(--bg-elevated)',
               border: '1px solid var(--border-subtle)',
@@ -161,7 +161,7 @@ export default function NotesPage() {
             type="date"
             value={dateFrom}
             onChange={(e) => { setDateFrom(e.target.value); setPage(0) }}
-            className="px-3 py-1.5 rounded-lg text-xs focus:outline-none"
+            className="px-3 py-2 rounded-lg text-xs focus:outline-none min-h-[44px]"
             style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}
           />
           <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>~</span>
@@ -169,13 +169,13 @@ export default function NotesPage() {
             type="date"
             value={dateTo}
             onChange={(e) => { setDateTo(e.target.value); setPage(0) }}
-            className="px-3 py-1.5 rounded-lg text-xs focus:outline-none"
+            className="px-3 py-2 rounded-lg text-xs focus:outline-none min-h-[44px]"
             style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}
           />
           <select
             value={tag}
             onChange={(e) => { setTag(e.target.value); setPage(0) }}
-            className="px-3 py-1.5 rounded-lg text-xs focus:outline-none appearance-none"
+            className="px-3 py-2 rounded-lg text-xs focus:outline-none appearance-none min-h-[44px]"
             style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}
           >
             <option value="">全部标签</option>
@@ -185,7 +185,7 @@ export default function NotesPage() {
           </select>
           <button
             onClick={() => { setFavOnly(!favOnly); setPage(0) }}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+            className="px-3 py-2 rounded-lg text-xs font-medium transition-all min-h-[44px]"
             style={favOnly
               ? { background: 'var(--accent-subtle)', color: 'var(--accent)', border: '1px solid var(--border-accent)' }
               : { background: 'var(--bg-elevated)', color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)' }
@@ -198,7 +198,7 @@ export default function NotesPage() {
             <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{total} 篇</span>
             <button
               onClick={handleRefresh}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+              className="px-3 py-2 rounded-lg text-xs font-medium transition-all min-h-[44px]"
               style={{ background: 'var(--accent-subtle)', color: 'var(--accent)' }}
             >
               刷新
@@ -208,15 +208,15 @@ export default function NotesPage() {
       </div>
       
       {/* 页面头部 */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-display" style={{ color: 'var(--text-primary)' }}>我的笔记</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex items-center gap-3 flex-wrap">
+          <h1 className="text-xl md:text-2xl font-display" style={{ color: 'var(--text-primary)' }}>我的笔记</h1>
           
           {/* 视图切换 */}
           <div className="flex items-center rounded-lg p-0.5" style={{ background: 'var(--bg-elevated)' }}>
             <button
               onClick={() => setViewMode('list')}
-              className="p-1.5 rounded-md transition-all"
+              className="p-2 rounded-md transition-all min-h-[44px] min-w-[44px] flex items-center justify-center"
               style={viewMode === 'list'
                 ? { background: 'var(--bg-card)', color: 'var(--accent)' }
                 : { color: 'var(--text-tertiary)' }
@@ -229,7 +229,7 @@ export default function NotesPage() {
             </button>
             <button
               onClick={() => setViewMode('grid')}
-              className="p-1.5 rounded-md transition-all"
+              className="p-2 rounded-md transition-all min-h-[44px] min-w-[44px] flex items-center justify-center"
               style={viewMode === 'grid'
                 ? { background: 'var(--bg-card)', color: 'var(--accent)' }
                 : { color: 'var(--text-tertiary)' }
@@ -245,7 +245,7 @@ export default function NotesPage() {
           <select
             value={sortBy}
             onChange={e => setSortBy(e.target.value as 'time' | 'quality')}
-            className="px-3 py-1.5 rounded-lg text-xs focus:outline-none"
+            className="px-3 py-2 rounded-lg text-xs focus:outline-none min-h-[44px]"
             style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}
           >
             <option value="time">按时间</option>
@@ -253,7 +253,7 @@ export default function NotesPage() {
           </select>
         </div>
         
-        <Link href="/dashboard/notes/new" className="btn-primary px-5 py-2.5 text-sm">
+        <Link href="/dashboard/notes/new" className="btn-primary px-5 py-2.5 text-sm min-h-[44px] inline-flex items-center justify-center">
           ✏️ 新建笔记
         </Link>
       </div>
@@ -265,7 +265,7 @@ export default function NotesPage() {
         </div>
       ) : notes && notes.length > 0 ? (
         viewMode === 'grid' ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {notes.map(note => (
               <Link key={note.id} href={`/dashboard/notes/${note.id}`} className="card p-4 block">
                 {note.quality_score != null && (
@@ -308,12 +308,12 @@ export default function NotesPage() {
         ) : (
           <div className="grid gap-4">
             {notes.map(note => (
-              <div key={note.id} className="card p-6">
-                <div className="flex items-start justify-between gap-4">
+              <div key={note.id} className="card p-4 md:p-6">
+                <div className="flex items-start justify-between gap-3 md:gap-4">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start justify-between gap-3 md:gap-4">
                       <Link href={`/dashboard/notes/${note.id}`} className="flex-1 min-w-0">
-                        <h3 className="font-bold text-lg mb-2 truncate" style={{ color: 'var(--text-primary)' }}>
+                        <h3 className="font-bold text-base md:text-lg mb-2 truncate" style={{ color: 'var(--text-primary)' }}>
                           {note.title || '无标题'}
                         </h3>
                         <p className="text-sm line-clamp-2 mb-3" style={{ color: 'var(--text-secondary)' }}>
@@ -322,7 +322,7 @@ export default function NotesPage() {
                         </p>
                       </Link>
                       
-                      <div className="flex-shrink-0 ml-4">
+                      <div className="flex-shrink-0 ml-3 md:ml-4">
                         <QualityScoreBadge noteId={note.id} initialScore={note.quality_score} />
                       </div>
                     </div>
@@ -387,11 +387,11 @@ export default function NotesPage() {
       {/* 分页控件 */}
       {!loading && notes && notes.length > 0 && (
         <div className="mt-8 flex flex-col items-center">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap justify-center">
             <button
               onClick={() => setPage(prev => Math.max(0, prev - 1))}
               disabled={page === 0}
-              className="px-4 py-2 rounded-lg transition-colors"
+              className="px-4 py-2.5 rounded-lg transition-colors min-h-[44px] min-w-[80px]"
               style={page === 0
                 ? { background: 'var(--bg-elevated)', color: 'var(--text-tertiary)', cursor: 'not-allowed' }
                 : { background: 'var(--bg-elevated)', color: 'var(--text-secondary)' }
@@ -400,14 +400,14 @@ export default function NotesPage() {
               上一页
             </button>
             
-            <span className="mx-2" style={{ color: 'var(--text-secondary)' }}>
+            <span className="mx-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
               第 {page + 1} 页，共 {totalPages} 页
             </span>
             
             <button
               onClick={() => setPage(prev => Math.min(totalPages - 1, prev + 1))}
               disabled={page === totalPages - 1 || totalPages === 0}
-              className="px-4 py-2 rounded-lg transition-colors"
+              className="px-4 py-2.5 rounded-lg transition-colors min-h-[44px] min-w-[80px]"
               style={page === totalPages - 1 || totalPages === 0
                 ? { background: 'var(--bg-elevated)', color: 'var(--text-tertiary)', cursor: 'not-allowed' }
                 : { background: 'var(--bg-elevated)', color: 'var(--text-secondary)' }

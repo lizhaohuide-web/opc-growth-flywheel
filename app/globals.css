@@ -89,6 +89,16 @@
       min-height: 44px;
       min-width: 44px;
     }
+    
+    /* iOS 安全区域 */
+    .safe-area-pb {
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+  }
+  
+  /* iOS 安全区域工具类 */
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 }
 

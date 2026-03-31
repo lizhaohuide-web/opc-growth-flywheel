@@ -129,7 +129,7 @@ export default function DashboardLayout({ children }: Props) {
       <div className="md:hidden fixed top-0 left-0 right-0 h-14 z-50" style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-subtle)' }}>
         <div style={{ height: '1px', background: 'linear-gradient(90deg, var(--accent), transparent)' }}></div>
         <div className="flex items-center justify-between h-full px-4">
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-lg" style={{ color: 'var(--text-secondary)' }}>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center" style={{ color: 'var(--text-secondary)' }}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -153,7 +153,7 @@ export default function DashboardLayout({ children }: Props) {
                       key={item.href}
                       href={item.href}
                       onClick={() => setSidebarOpen(false)}
-                      className="flex items-center px-3 py-3 rounded-lg transition-all relative"
+                      className="flex items-center px-3 py-3 rounded-lg transition-all relative min-h-[44px]"
                       style={{
                         color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
                         background: isActive ? 'var(--accent-subtle)' : 'transparent',
@@ -181,9 +181,32 @@ export default function DashboardLayout({ children }: Props) {
         )}
       </div>
 
+      {/* 移动端底部导航 */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50" style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-subtle)' }}>
+        <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, var(--accent))' }}></div>
+        <div className="flex items-center justify-around safe-area-pb">
+          {navItems.slice(0, 5).map(item => {
+            const isActive = pathname === item.href
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex flex-col items-center justify-center py-2 px-2 min-h-[44px] flex-1"
+                style={{
+                  color: isActive ? 'var(--accent)' : 'var(--text-tertiary)',
+                }}
+              >
+                <span className="text-lg mb-0.5">{item.icon}</span>
+                <span className="text-[10px] font-medium truncate w-full text-center">{item.label}</span>
+              </Link>
+            )
+          })}
+        </div>
+      </nav>
+
       {/* 主内容区 */}
-      <main className="flex-1 md:ml-60 pt-14 md:pt-0 bg-noise" style={{ minHeight: '100vh' }}>
-        <div className="p-5 md:p-8 max-w-6xl mx-auto">
+      <main className="flex-1 md:ml-60 pt-14 md:pt-0 pb-16 md:pb-0 bg-noise" style={{ minHeight: '100vh' }}>
+        <div className="p-4 md:p-8 max-w-6xl mx-auto">
           {children}
         </div>
       </main>

@@ -562,7 +562,7 @@ export default function XiaohongshuPage() {
           <div className="flex gap-3 pt-4">
             <button
               onClick={() => setSelectedNote(null)}
-              className="px-6 py-2.5 rounded-lg font-medium transition-colors"
+              className="px-4 md:px-6 py-3 rounded-lg font-medium transition-colors min-h-[44px]"
               style={{
                 background: 'var(--bg-elevated)',
                 color: 'var(--text-secondary)',
@@ -573,7 +573,7 @@ export default function XiaohongshuPage() {
             <button
               onClick={handleGenerateCopy}
               disabled={!selectedNote || generating}
-              className="flex-1 px-6 py-2.5 rounded-lg font-medium transition-all disabled:opacity-50"
+              className="flex-1 px-4 md:px-6 py-3 rounded-lg font-medium transition-all disabled:opacity-50 min-h-[44px]"
               style={{
                 background: selectedNote ? '#ff2442' : 'var(--bg-elevated)',
                 color: selectedNote ? '#fff' : 'var(--text-tertiary)',
@@ -666,7 +666,7 @@ export default function XiaohongshuPage() {
           <div className="flex gap-3 pt-4">
             <button
               onClick={() => setStep(0)}
-              className="px-6 py-2.5 rounded-lg font-medium transition-colors"
+              className="px-4 md:px-6 py-3 rounded-lg font-medium transition-colors min-h-[44px]"
               style={{
                 background: 'var(--bg-elevated)',
                 color: 'var(--text-secondary)',
@@ -676,7 +676,7 @@ export default function XiaohongshuPage() {
             </button>
             <button
               onClick={() => setStep(2)}
-              className="flex-1 px-6 py-2.5 rounded-lg font-medium transition-all"
+              className="flex-1 px-4 md:px-6 py-3 rounded-lg font-medium transition-all min-h-[44px]"
               style={{
                 background: '#ff2442',
                 color: '#fff',
@@ -742,12 +742,12 @@ export default function XiaohongshuPage() {
             <h4 className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
               数量
             </h4>
-            <div className="flex gap-2 flex-wrap">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
               {[3, 4, 5, 6, 7, 8].map(count => (
                 <button
                   key={count}
                   onClick={() => setImageCount(count)}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${imageCount === count ? 'ring-2 ring-[#ff2442]' : ''}`}
+                  className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all min-h-[44px] ${imageCount === count ? 'ring-2 ring-[#ff2442]' : ''}`}
                   style={{
                     background: imageCount === count ? '#ff2442' : 'var(--bg-primary)',
                     color: imageCount === count ? '#fff' : 'var(--text-primary)',
@@ -765,18 +765,18 @@ export default function XiaohongshuPage() {
             <h4 className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
               风格
             </h4>
-            <div className="grid grid-cols-3 md:grid-cols-5 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
               {xhsStyles.map(style => (
                 <button
                   key={style.id}
                   onClick={() => setImageStyle(style.id)}
-                  className={`p-2 rounded-lg transition-all ${imageStyle === style.id ? 'ring-2 ring-[#ff2442]' : ''}`}
+                  className={`p-3 rounded-lg transition-all min-h-[60px] ${imageStyle === style.id ? 'ring-2 ring-[#ff2442]' : ''}`}
                   style={{
                     background: imageStyle === style.id ? '#ff244215' : 'var(--bg-primary)',
                     border: `1px solid ${imageStyle === style.id ? '#ff2442' : 'var(--border-subtle)'}`,
                   }}
                 >
-                  <span className="text-lg block mb-0.5">{style.icon}</span>
+                  <span className="text-xl block mb-1">{style.icon}</span>
                   <p className="text-xs font-medium truncate" style={{ color: 'var(--text-primary)' }}>
                     {style.name}
                   </p>
@@ -790,12 +790,12 @@ export default function XiaohongshuPage() {
             <h4 className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
               布局
             </h4>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
               {imageLayouts.map(layout => (
                 <button
                   key={layout.id}
                   onClick={() => setImageLayout(layout.id)}
-                  className={`p-2 rounded-lg transition-all ${imageLayout === layout.id ? 'ring-2 ring-[#ff2442]' : ''}`}
+                  className={`p-3 rounded-lg transition-all min-h-[52px] ${imageLayout === layout.id ? 'ring-2 ring-[#ff2442]' : ''}`}
                   style={{
                     background: imageLayout === layout.id ? '#ff244215' : 'var(--bg-primary)',
                     border: `1px solid ${imageLayout === layout.id ? '#ff2442' : 'var(--border-subtle)'}`,
@@ -814,7 +814,7 @@ export default function XiaohongshuPage() {
             <h4 className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
               比例
             </h4>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
               {[
                 { id: '3:4', name: '3:4' },
                 { id: '1:1', name: '1:1' },
@@ -826,7 +826,7 @@ export default function XiaohongshuPage() {
                 <button
                   key={ratio.id}
                   onClick={() => setImageRatio(ratio.id)}
-                  className={`p-2 rounded-lg transition-all ${imageRatio === ratio.id ? 'ring-2 ring-[#ff2442]' : ''}`}
+                  className={`p-3 rounded-lg transition-all min-h-[44px] ${imageRatio === ratio.id ? 'ring-2 ring-[#ff2442]' : ''}`}
                   style={{
                     background: imageRatio === ratio.id ? '#ff244215' : 'var(--bg-primary)',
                     border: `1px solid ${imageRatio === ratio.id ? '#ff2442' : 'var(--border-subtle)'}`,
@@ -843,7 +843,7 @@ export default function XiaohongshuPage() {
           <div className="flex gap-3 pt-3 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
             <button
               onClick={() => setStep(1)}
-              className="px-5 py-2 rounded-lg text-sm font-medium transition-colors"
+              className="px-4 md:px-5 py-3 rounded-lg text-sm font-medium transition-colors min-h-[44px]"
               style={{
                 background: 'var(--bg-elevated)',
                 color: 'var(--text-secondary)',
@@ -854,7 +854,7 @@ export default function XiaohongshuPage() {
             <button
               onClick={handleGeneratePrompts}
               disabled={generating}
-              className="flex-1 px-5 py-2 rounded-lg text-sm font-medium transition-all"
+              className="flex-1 px-4 md:px-5 py-3 rounded-lg text-sm font-medium transition-all min-h-[44px]"
               style={{
                 background: '#ff2442',
                 color: '#fff',
@@ -955,7 +955,7 @@ export default function XiaohongshuPage() {
           <div className="flex gap-3 pt-4">
             <button
               onClick={() => setStep(2)}
-              className="px-6 py-2.5 rounded-lg font-medium transition-colors"
+              className="px-4 md:px-6 py-3 rounded-lg font-medium transition-colors min-h-[44px]"
               style={{
                 background: 'var(--bg-elevated)',
                 color: 'var(--text-secondary)',
@@ -965,7 +965,7 @@ export default function XiaohongshuPage() {
             </button>
             <button
               onClick={handleGenerateImages}
-              className="flex-1 px-6 py-2.5 rounded-lg font-medium transition-all"
+              className="flex-1 px-4 md:px-6 py-3 rounded-lg font-medium transition-all min-h-[44px]"
               style={{
                 background: '#ff2442',
                 color: '#fff',
@@ -1030,7 +1030,7 @@ export default function XiaohongshuPage() {
             </p>
             
             {/* 图片预览 */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4 mb-6">
               {generatedImages.map((img, index) => (
                 <div key={index} className="space-y-2">
                   <div
@@ -1051,7 +1051,7 @@ export default function XiaohongshuPage() {
                   <button
                     onClick={() => handleRegenerateImage(index)}
                     disabled={generating}
-                    className="w-full text-xs px-2 py-1.5 rounded-lg transition-all hover:shadow-md flex items-center justify-center gap-1 disabled:opacity-50"
+                    className="w-full text-xs px-2 py-2 rounded-lg transition-all hover:shadow-md flex items-center justify-center gap-1 disabled:opacity-50 min-h-[44px]"
                     style={{
                       background: 'var(--bg-primary)',
                       color: 'var(--text-secondary)',
@@ -1080,7 +1080,7 @@ export default function XiaohongshuPage() {
           <div className="flex gap-3 pt-4">
             <button
               onClick={() => setStep(3)}
-              className="px-6 py-2.5 rounded-lg font-medium transition-colors"
+              className="px-4 md:px-6 py-3 rounded-lg font-medium transition-colors min-h-[44px]"
               style={{
                 background: 'var(--bg-elevated)',
                 color: 'var(--text-secondary)',
@@ -1090,7 +1090,7 @@ export default function XiaohongshuPage() {
             </button>
             <button
               onClick={() => setStep(6)}
-              className="flex-1 px-6 py-2.5 rounded-lg font-medium transition-all"
+              className="flex-1 px-4 md:px-6 py-3 rounded-lg font-medium transition-all min-h-[44px]"
               style={{
                 background: '#ff2442',
                 color: '#fff',
@@ -1145,7 +1145,7 @@ export default function XiaohongshuPage() {
             </div>
             
             {/* 图片缩略图 */}
-            <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
               {generatedImages.map((img, index) => (
                 <div
                   key={index}
@@ -1170,7 +1170,7 @@ export default function XiaohongshuPage() {
           <div className="flex gap-3 pt-4">
             <button
               onClick={() => setStep(5)}
-              className="px-6 py-2.5 rounded-lg font-medium transition-colors"
+              className="px-4 md:px-6 py-3 rounded-lg font-medium transition-colors min-h-[44px]"
               style={{
                 background: 'var(--bg-elevated)',
                 color: 'var(--text-secondary)',
@@ -1180,7 +1180,7 @@ export default function XiaohongshuPage() {
             </button>
             <button
               onClick={handleSave}
-              className="flex-1 px-6 py-2.5 rounded-lg font-medium transition-all"
+              className="flex-1 px-4 md:px-6 py-3 rounded-lg font-medium transition-all min-h-[44px]"
               style={{
                 background: '#ff2442',
                 color: '#fff',

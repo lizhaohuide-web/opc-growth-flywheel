@@ -4,8 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import NoteSelector from '../components/NoteSelector'
-import StyleSelector from '../components/StyleSelector'
-import VersionPreview from '../components/VersionPreview'
 import StepIndicator from '../components/StepIndicator'
 
 interface Note {
@@ -14,15 +12,21 @@ interface Note {
   content: string
 }
 
+const momentsStyles = [
+  { id: '走心感悟', name: '走心感悟', description: '真诚分享内心感受', icon: '💭' },
+  { id: '日常分享', name: '日常分享', description: '记录生活小确幸', icon: '☕' },
+  { id: '鸡汤励志', name: '鸡汤励志', description: '正能量满满', icon: '💪' },
+  { id: '幽默段子', name: '幽默段子', description: '有趣好玩', icon: '😄' },
+  { id: '知识干货', name: '知识干货', description: '分享有价值信息', icon: '📚' },
+]
+
 export default function MomentsPage() {
   const router = useRouter()
   const [step, setStep] = useState(0)
   const [selectedNote, setSelectedNote] = useState<Note | null>(null)
   const [selectedStyle, setSelectedStyle] = useState<string>('')
   const [generating, setGenerating] = useState(false)
-  const [generatedContent, setGeneratedContent] = useState<{
-    content: string
-  } | null>(null)
+  const [generatedContent, setGeneratedContent] = useState<string>('')
 
   const steps = ['选择笔记', '选择风格', '生成文案']
 
@@ -32,37 +36,26 @@ export default function MomentsPage() {
     setGenerating(true)
     
     try {
-      const supabase = createClient()
-      
-      const response = await fetch('/api/ai-studio/generate', {
+      const response = await fetch('/api/ai-studio/moments/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           noteId: selectedNote.id,
-          platform: 'moments',
           style: selectedStyle,
         }),
       })
       
       if (response.ok) {
         const data = await response.json()
-        setGeneratedContent(data)
+        setGeneratedContent(data.content)
         setStep(2)
-        
-        try {
-          await supabase.from('ai_versions').insert({
-            note_id: selectedNote.id,
-            platform: 'moments',
-            version: 1,
-            content: data.content,
-            style: selectedStyle,
-          })
-        } catch (e) {
-          console.log('Failed to save version')
-        }
+      } else {
+        const error = await response.json()
+        alert('生成失败：' + (error.error || '未知错误'))
       }
     } catch (error) {
       console.error('Generation failed:', error)
+      alert('生成失败，请重试')
     } finally {
       setGenerating(false)
     }
@@ -73,12 +66,31 @@ export default function MomentsPage() {
     
     try {
       const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      // 获取当前最大版本号
+      const { data: existingVersions } = await supabase
+        .from('ai_versions')
+        .select('version')
+        .eq('note_id', selectedNote.id)
+        .eq('platform', 'moments')
+        .order('version', { ascending: false })
+        .limit(1)
+      
+      const nextVersion = (existingVersions && existingVersions.length > 0) 
+        ? (existingVersions[0].version || 0) + 1 
+        : 1
+      
       await supabase.from('ai_versions').insert({
         note_id: selectedNote.id,
         platform: 'moments',
-        version: 1,
-        content: generatedContent.content,
+        version: nextVersion,
+        content: generatedContent,
         style: selectedStyle,
+        user_id: user?.id,
+        metadata: {
+          style: selectedStyle,
+        },
       })
       
       alert('保存成功！')
@@ -86,6 +98,15 @@ export default function MomentsPage() {
     } catch (error) {
       console.error('Save failed:', error)
       alert('保存失败，请重试')
+    }
+  }
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedContent)
+      alert('已复制到剪贴板！')
+    } catch (error) {
+      alert('复制失败，请手动复制')
     }
   }
 
@@ -120,7 +141,7 @@ export default function MomentsPage() {
       {/* Step Indicator */}
       <StepIndicator steps={steps} currentStep={step} />
 
-      {/* Step 1: Select Note */}
+      {/* Step 0: Select Note */}
       {step === 0 && (
         <div className="card p-6 space-y-6">
           <NoteSelector
@@ -144,21 +165,47 @@ export default function MomentsPage() {
                 笔记预览
               </h3>
               <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                {selectedNote.content.substring(0, 200)}...
+                {selectedNote.content.substring(0, 300)}...
               </p>
             </div>
           )}
         </div>
       )}
 
-      {/* Step 2: Select Style */}
+      {/* Step 1: Select Style */}
       {step === 1 && (
         <div className="card p-6 space-y-6">
-          <StyleSelector
-            selectedStyle={selectedStyle}
-            onSelectStyle={setSelectedStyle}
-            platform="moments"
-          />
+          <div>
+            <label className="block text-sm font-medium mb-3" style={{ color: 'var(--text-primary)' }}>
+              选择风格
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {momentsStyles.map(option => {
+                const isSelected = selectedStyle === option.id
+                
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setSelectedStyle(option.id)}
+                    className="p-4 rounded-xl text-left transition-all"
+                    style={{
+                      background: isSelected ? 'var(--accent-subtle)' : 'var(--bg-primary)',
+                      border: isSelected ? '1px solid var(--accent)' : '1px solid var(--border-subtle)',
+                    }}
+                  >
+                    <div className="text-2xl mb-2">{option.icon}</div>
+                    <div className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
+                      {option.name}
+                    </div>
+                    <div className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
+                      {option.description}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
           
           <div
             className="p-4 rounded-lg"
@@ -177,7 +224,7 @@ export default function MomentsPage() {
                   <li>• 简短精炼，50-150 字最佳</li>
                   <li>• 生活化语言，接地气</li>
                   <li>• 真实情感，引发共鸣</li>
-                  <li>• 适合配 1-9 张图片</li>
+                  <li>• emoji 2-4 个，自然点缀</li>
                 </ul>
               </div>
             </div>
@@ -201,7 +248,6 @@ export default function MomentsPage() {
               style={{
                 background: selectedStyle ? '#1aad19' : 'var(--bg-elevated)',
                 color: selectedStyle ? 'white' : 'var(--text-tertiary)',
-                opacity: !selectedStyle || generating ? 0.5 : 1,
               }}
             >
               {generating ? '生成中...' : '开始生成'}
@@ -210,20 +256,39 @@ export default function MomentsPage() {
         </div>
       )}
 
-      {/* Step 3: Preview & Edit */}
+      {/* Step 2: Preview & Edit */}
       {step === 2 && generatedContent && (
         <div className="space-y-6">
           {/* Content Preview */}
-          <VersionPreview
-            title="朋友圈文案"
-            content={generatedContent.content}
-            platform="moments"
-            version={1}
-            onEdit={(newContent) => {
-              setGeneratedContent({ ...generatedContent, content: newContent })
-            }}
-            onSave={handleSave}
-          />
+          <div className="card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>
+                朋友圈文案
+              </h3>
+              <button
+                onClick={handleCopy}
+                className="text-sm px-3 py-1.5 rounded-lg transition-colors"
+                style={{
+                  background: 'var(--accent-subtle)',
+                  color: 'var(--accent)',
+                }}
+              >
+                📋 复制
+              </button>
+            </div>
+            
+            <textarea
+              value={generatedContent}
+              onChange={(e) => setGeneratedContent(e.target.value)}
+              rows={8}
+              className="w-full px-4 py-3 rounded-lg text-sm resize-none"
+              style={{
+                background: 'var(--bg-primary)',
+                border: '1px solid var(--border-subtle)',
+                color: 'var(--text-primary)',
+              }}
+            />
+          </div>
 
           {/* Character Count */}
           <div
@@ -240,12 +305,12 @@ export default function MomentsPage() {
               <span
                 className="text-sm font-medium"
                 style={{
-                  color: generatedContent.content.length >= 50 && generatedContent.content.length <= 150
+                  color: generatedContent.length >= 50 && generatedContent.length <= 150
                     ? 'var(--success)'
                     : 'var(--warning)',
                 }}
               >
-                {generatedContent.content.length} / 150 字
+                {generatedContent.length} / 150 字
               </span>
             </div>
           </div>
@@ -270,7 +335,7 @@ export default function MomentsPage() {
                 color: 'white',
               }}
             >
-              保存并发布
+              保存
             </button>
           </div>
         </div>
