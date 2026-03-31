@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { callAI } from '@/lib/ai/client'
+import { callNovaAIClaude } from '@/lib/ai/client-novai'
 
 /**
  * 完整复刻 baoyu skill 的小红书图片提示词生成流程
@@ -137,7 +138,7 @@ import { createClient } from '@/lib/supabase/server'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { noteId, title: userTitle, imageCount = 4, style = 'notion', layout = 'balanced', ratio = '3:4' } = body
+    const { noteId, title: userTitle, imageCount = 4, style = 'notion', layout = 'balanced', ratio = '3:4', useClaude = false } = body
 
     if (!noteId) {
       return NextResponse.json(
@@ -145,6 +146,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    console.log('🎨 使用模型:', useClaude ? 'new Claude (NovaAPI)' : 'Qwen (阿里云百炼)')
 
     // 从数据库读取完整文案
     const supabase = await createClient()
@@ -257,7 +260,13 @@ ${content}
 - 每个要点都必须是文案中的**具体内容**，不能是"要点 1"这种空话
 - 直接返回 JSON，不要有任何额外解释`
 
-    const analysisResult = await callAI(analysisPrompt, '你是小红书内容策划专家，擅长深度分析文案并提取所有要点。')
+    // 根据配置选择 AI 模型
+    const callAIFunction = useClaude ? callNovaAIClaude : callAI
+    const analysisSystemPrompt = useClaude 
+      ? '你是小红书内容策划专家，擅长深度分析文案并提取所有要点。'
+      : undefined
+    
+    const analysisResult = await callAIFunction(analysisPrompt, analysisSystemPrompt)
     
     // 解析分析结果
     let analysisData: any = null
@@ -424,7 +433,11 @@ ${analysisData.allPoints?.map((p: string, i: number) => `${i + 1}. ${p}`).join('
 
 直接返回 JSON，不要有任何额外解释。`
 
-    const outlineResult = await callAI(outlinePrompt, '你是小红书视觉策划专家，擅长为文案生成详细的图片大纲。')
+    const outlineSystemPrompt = useClaude
+      ? '你是小红书视觉策划专家，擅长为文案生成详细的图片大纲。'
+      : undefined
+    
+    const outlineResult = await callAIFunction(outlinePrompt, outlineSystemPrompt)
     
     // 解析大纲
     let outlineData: any = null

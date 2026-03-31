@@ -8,9 +8,9 @@
  * })
  */
 
-const QWEN_API_KEY = process.env.QWEN_API_KEY || 'sk-sp-f18e0636b4c34b02a89167a2d5730758'
-const QWEN_BASE_URL = 'https://coding.dashscope.aliyuncs.com/v1'
-const QWEN_MODEL = 'qwen3.5-plus'
+const QWEN_API_KEY = process.env.QWEN_API_KEY || process.env.AI_API_KEY
+const QWEN_BASE_URL = process.env.AI_BASE_URL || 'https://coding.dashscope.aliyuncs.com/v1'
+const QWEN_MODEL = process.env.AI_MODEL || 'qwen3.5-plus'
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant'

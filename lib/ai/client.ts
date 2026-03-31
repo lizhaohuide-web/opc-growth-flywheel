@@ -4,9 +4,9 @@
 
 export async function callAI(prompt: string, systemPrompt?: string): Promise<string> {
   // 阿里云百炼配置（兼容 OpenAI 接口）
-  const apiKey = 'sk-sp-f18e0636b4c34b02a89167a2d5730758'
-  const baseUrl = 'https://coding.dashscope.aliyuncs.com/v1'
-  const model = 'qwen3.5-plus'
+  const apiKey = process.env.AI_API_KEY
+  const baseUrl = process.env.AI_BASE_URL || 'https://coding.dashscope.aliyuncs.com/v1'
+  const model = process.env.AI_MODEL || 'qwen3.5-plus'
   
   console.log('🤖 AI 请求配置:', { 
     provider: '阿里云百炼 (兼容 OpenAI)',

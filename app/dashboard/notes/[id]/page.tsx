@@ -40,7 +40,7 @@ export default async function NotePage({ params }: { params: { id: string } }) {
         
         <div className="flex items-center gap-2">
           <Link
-            href={`/dashboard/ai-studio/${note.id}`}
+            href={`/dashboard/ai-studio?noteId=${note.id}`}
             className="px-4 py-2 text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
             style={{ background: 'var(--accent)', color: 'var(--bg-primary)' }}
           >

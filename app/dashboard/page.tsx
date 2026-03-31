@@ -82,7 +82,7 @@ export default async function DashboardPage() {
       </div>
       
       {/* 快速入口 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Link href="/dashboard/notes/new"
           className="rounded-xl p-6 text-white hover:opacity-90 transition-opacity"
           style={{ background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%)' }}>
@@ -92,6 +92,18 @@ export default async function DashboardPage() {
               <p className="mt-2" style={{ color: 'rgba(255,255,255,0.8)' }}>记录今天的学习和成长</p>
             </div>
             <div className="text-5xl">✏️</div>
+          </div>
+        </Link>
+        
+        <Link href="/dashboard/ai-studio"
+          className="rounded-xl p-6 text-white hover:opacity-90 transition-opacity"
+          style={{ background: 'linear-gradient(135deg, #ff2442 0%, #ff6b7a 100%)' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-xl font-bold">🎨 AI 工作室</h3>
+              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.8)' }}>一键改写为小红书/公众号</p>
+            </div>
+            <div className="text-5xl">◈</div>
           </div>
         </Link>
         
@@ -181,47 +193,29 @@ export default async function DashboardPage() {
         <h2 className="text-xl font-display mb-4" style={{ color: 'var(--text-primary)' }}>🤖 AI 助手</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
-            href={notes && notes.length > 0 ? `/dashboard/notes/${notes[0].id}` : '/dashboard/notes'}
+            href="/dashboard/ai-studio/xiaohongshu"
             className="card p-4 hover:opacity-90 transition-opacity"
           >
             <div className="flex items-center gap-3">
-              <div className="text-3xl">✨</div>
+              <div className="text-3xl">📕</div>
               <div>
-                <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>智能摘要</h3>
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>自动生成笔记摘要 + 知识链接</p>
+                <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>小红书改写</h3>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>生成文案 + 配图一键搞定</p>
               </div>
             </div>
-            {notes && notes.length > 0 ? (
-              <p className="text-xs mt-3" style={{ color: 'var(--accent)' }}>
-                📝 打开最新笔记使用
-              </p>
-            ) : (
-              <p className="text-xs mt-3" style={{ color: 'var(--text-tertiary)' }}>
-                💡 先创建第一篇笔记
-              </p>
-            )}
           </Link>
           
           <Link
-            href={notes && notes.length > 0 ? `/dashboard/notes/${notes[0].id}` : '/dashboard/notes'}
+            href="/dashboard/ai-studio/wechat"
             className="card p-4 hover:opacity-90 transition-opacity"
           >
             <div className="flex items-center gap-3">
               <div className="text-3xl">📱</div>
               <div>
-                <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>内容生成</h3>
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI 改写为公众号/小红书</p>
+                <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>公众号改写</h3>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI 改写为公众号文章</p>
               </div>
             </div>
-            {notes && notes.length > 0 ? (
-              <p className="text-xs mt-3" style={{ color: 'var(--accent)' }}>
-                📝 打开最新笔记使用
-              </p>
-            ) : (
-              <p className="text-xs mt-3" style={{ color: 'var(--text-tertiary)' }}>
-                💡 先创建第一篇笔记
-              </p>
-            )}
           </Link>
           
           <Link href="/dashboard/reports/weekly" className="card p-4 hover:opacity-90 transition-opacity">

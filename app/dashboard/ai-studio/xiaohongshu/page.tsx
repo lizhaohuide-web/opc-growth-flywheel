@@ -68,6 +68,7 @@ export default function XiaohongshuPage() {
   const [imageStyle, setImageStyle] = useState(cachedData?.imageStyle || 'cute')
   const [imageLayout, setImageLayout] = useState(cachedData?.imageLayout || 'balanced')
   const [imageRatio, setImageRatio] = useState(cachedData?.imageRatio || '3:4')
+  const [useClaude, setUseClaude] = useState(false) // 是否使用 new Claude
   
   // 步骤 3: 生成的提示词
   const [imagePrompts, setImagePrompts] = useState(cachedData?.imagePrompts || [])
@@ -265,6 +266,7 @@ export default function XiaohongshuPage() {
           style: imageStyle,
           layout: imageLayout,
           ratio: imageRatio,
+          useClaude: useClaude,  // 是否使用 new Claude
         }),
       })
       
@@ -692,6 +694,48 @@ export default function XiaohongshuPage() {
           <h3 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
             配图设置
           </h3>
+          
+          {/* AI 模型选择 */}
+          <div className="mb-4 p-4 rounded-lg" style={{ background: 'var(--accent-subtle)', border: '1px solid var(--border-accent)' }}>
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                🤖 AI 模型
+              </h4>
+              <span className="text-xs px-2 py-1 rounded" style={{ 
+                background: useClaude ? 'var(--accent)' : 'var(--bg-elevated)',
+                color: useClaude ? 'var(--bg-primary)' : 'var(--text-secondary)'
+              }}>
+                {useClaude ? 'new Claude' : 'Qwen'}
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setUseClaude(false)}
+                className={`flex-1 px-3 py-1.5 rounded text-xs font-medium transition-all ${!useClaude ? 'ring-2 ring-[var(--accent)]' : ''}`}
+                style={{
+                  background: !useClaude ? 'var(--accent)' : 'var(--bg-primary)',
+                  color: !useClaude ? 'var(--bg-primary)' : 'var(--text-primary)',
+                }}
+              >
+                Qwen
+              </button>
+              <button
+                onClick={() => setUseClaude(true)}
+                className={`flex-1 px-3 py-1.5 rounded text-xs font-medium transition-all ${useClaude ? 'ring-2 ring-[var(--accent)]' : ''}`}
+                style={{
+                  background: useClaude ? 'var(--accent)' : 'var(--bg-primary)',
+                  color: useClaude ? 'var(--bg-primary)' : 'var(--text-primary)',
+                }}
+              >
+                new Claude ⭐
+              </button>
+            </div>
+            <p className="text-xs mt-2" style={{ color: 'var(--text-tertiary)' }}>
+              {useClaude 
+                ? '✨ 提示词质量更高，风格更统一' 
+                : '💡 速度快，适合快速生成'}
+            </p>
+          </div>
           
           {/* 配图数量 */}
           <div className="mb-4">

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const DASHSCOPE_API_KEY = 'sk-18407568fd404754a3d18b93781e3db3'
+const DASHSCOPE_API_KEY = process.env.DASHSCOPE_API_KEY
 const DASHSCOPE_BASE_URL = 'https://dashscope.aliyuncs.com/api/v1'
 
 export async function POST(request: NextRequest) {

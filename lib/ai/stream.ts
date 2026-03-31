@@ -2,9 +2,9 @@
  * 流式 AI 调用 - 返回 ReadableStream
  */
 export function callAIStream(prompt: string, systemPrompt?: string): ReadableStream {
-  const apiKey = 'sk-sp-f18e0636b4c34b02a89167a2d5730758'
-  const baseUrl = 'https://coding.dashscope.aliyuncs.com/v1'
-  const model = 'qwen3.5-plus'
+  const apiKey = process.env.AI_API_KEY
+  const baseUrl = process.env.AI_BASE_URL || 'https://coding.dashscope.aliyuncs.com/v1'
+  const model = process.env.AI_MODEL || 'qwen3.5-plus'
 
   return new ReadableStream({
     async start(controller) {
